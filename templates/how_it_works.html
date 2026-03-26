@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>كيف يعمل النظام؟ — TrustLayer AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a href="/" class="navbar-brand">
+            <img src="/static/images/logo.svg" alt="TrustLayer AI" class="brand-logo" />
+        </a>
+        <ul class="navbar-links">
+            <li><a href="/">الصفحة الرئيسية</a></li>
+            <li><a href="/how-it-works" class="active">كيف يعمل النظام؟</a></li>
+            <li><a href="/use-system">استخدم النظام</a></li>
+            <li><a href="/dashboard">لوحة التحكم</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+    <div class="container">
+
+        <div style="text-align: center; margin-bottom: 48px;">
+            <div class="section-label">آلية عمل النظام</div>
+            <h1 class="page-title">كيف يعمل النظام؟</h1>
+            <p class="page-subtitle" style="margin-bottom: 0;">مراحل معالجة البيانات من تعبئة الاستبيان حتى الحفظ النهائي</p>
+        </div>
+
+        <!-- Workflow Steps -->
+        <div class="steps-grid">
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>يقوم المستخدم بتعبئة الاستبيان</h3>
+                <p>يجيب المستخدم على أسئلة الاستبيان المتعلقة بعاداته الاستهلاكية من خلال واجهة سهلة الاستخدام باللغة العربية.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>يتم إرسال البيانات إلى النظام</h3>
+                <p>بعد الضغط على زر "مراجعة الإجابات"، تُرسَل البيانات إلى TrustLayer API لمعالجتها والتحقق منها قبل الحفظ.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>يتم تشغيل قواعد التحقق المنطقي</h3>
+                <p>يُطبّق النظام 6 قواعد منطقية محددة مسبقاً تكتشف التعارضات بين الإجابات، مثل التعارض بين الدخل المنخفض وشراء السلع الفاخرة بشكل متكرر.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>يتم تشغيل التحليل الدلالي بالذكاء الاصطناعي</h3>
+                <p>بعد انتهاء التحقق المنطقي، يُحلّل نموذج الذكاء الاصطناعي الإجابات بحثاً عن تناقضات دلالية لم تكتشفها القواعد المنطقية، مستفيداً من السياق الكلي للإجابات.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h3>يتم حساب Confidence Score</h3>
+                <p>بناءً على جميع المشكلات المكتشفة وشدتها، يحسب النظام نقاط الثقة (من 0 إلى 100) ويحدد مستوى الجودة: عالية أو متوسطة أو منخفضة.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h3>يتم عرض التنبيهات والتفسيرات للمستخدم</h3>
+                <p>تُعرض المشكلات المكتشفة للمستخدم مع شرح واضح لكل مشكلة وسببها والإجراء المقترح لمعالجتها، بلغة عربية مبسطة.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">7</div>
+                <h3>يتم السماح للمستخدم بالتعديل أو التأكيد</h3>
+                <p>يمكن للمستخدم تعديل إجاباته والعودة للتحقق مجدداً، أو تأكيد إرسال الإجابات كما هي إذا كان يرى أنها صحيحة.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">8</div>
+                <h3>يتم حفظ البيانات بعد التحقق</h3>
+                <p>تُخزَّن الإجابات النهائية في قاعدة البيانات مع جميع بيانات التحقق والتصحيحات، مما يضمن سجلاً كاملاً لعملية ضمان الجودة.</p>
+            </div>
+
+        </div>
+
+        <!-- Architecture Flow -->
+        <div class="divider"></div>
+
+        <div style="text-align: center; margin-bottom: 24px;">
+            <div class="section-label">معمارية النظام</div>
+            <h2 style="font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 16px;">تدفق المعالجة</h2>
+        </div>
+
+        <div class="arch-flow">
+            <div class="arch-step">المستخدم</div>
+            <div class="arch-arrow">←</div>
+            <div class="arch-step">منصة الاستبيان</div>
+            <div class="arch-arrow">←</div>
+            <div class="arch-step">TrustLayer API</div>
+            <div class="arch-arrow">←</div>
+            <div class="arch-step">Rule Engine</div>
+            <div class="arch-arrow">←</div>
+            <div class="arch-step">AI Semantic Analysis</div>
+            <div class="arch-arrow">←</div>
+            <div class="arch-step">Confidence Score</div>
+            <div class="arch-arrow">←</div>
+            <div class="arch-step">Dynamic Intervention</div>
+            <div class="arch-arrow">←</div>
+            <div class="arch-step">Clean Data Storage</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/survey" class="btn btn-primary btn-lg">ابدأ الاستبيان الآن</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        TrustLayer AI — نظام ضمان جودة بيانات الاستبيانات
+        <div class="footer-team">تم التطوير بواسطة فريق بالمرصاد</div>
+    </div>
+</footer>
+
+</body>
+</html>

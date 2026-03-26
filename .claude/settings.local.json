@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/Komsh/Downloads/**)",
+      "Bash(python -c \"import ast, sys; files=[''main.py'',''database.py'',''models.py'',''rule_engine.py'',''ai_module.py'',''confidence_score.py'']; [print\\(f + '' OK''\\) or ast.parse\\(open\\(f\\).read\\(\\)\\) for f in files]\")",
+      "Bash(where py:*)",
+      "Bash(where python3.exe)",
+      "Bash(dir \"C:\\\\Python*\")",
+      "Bash(dir \"C:\\\\Users\\\\Komsh\\\\AppData\\\\Local\\\\Programs\\\\Python\")",
+      "Bash(py -c \"import ast; files=[''main.py'',''database.py'',''models.py'',''rule_engine.py'',''ai_module.py'',''confidence_score.py'']; [print\\(f+'' OK''\\) for f in files if not ast.parse\\(open\\(f\\).read\\(\\)\\) or True]\")",
+      "Bash(py -c \":*)",
+      "Bash(py -c \"import starlette; print\\(starlette.__version__\\)\")",
+      "Bash(mkdir -p c:/Users/Komsh/Downloads/Trustlayer_project/static/images)",
+      "Bash(cp c:/Users/Komsh/Downloads/Trustlayer_project/logo_101.jpg c:/Users/Komsh/Downloads/Trustlayer_project/static/images/logo_101.jpg)",
+      "Bash(python -c \"import json; f=open\\(''questions_config.json'',''r'',encoding=''utf-8''\\); data=json.load\\(f\\); print\\(''JSON OK, questions:'', len\\(data[''questions'']\\), ''rules:'', len\\(data[''rules'']\\)\\)\")"
+    ]
+  }
+}

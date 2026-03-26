@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تم الإرسال بنجاح — TrustLayer AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<div id="successContent" class="page-wrapper">
+    <div class="success-container">
+
+        <div class="success-icon">✓</div>
+
+        <h1 class="success-title">تم إرسال الاستبيان بنجاح</h1>
+        <p class="success-message">
+            تم حفظ الإجابات بنجاح.<br />
+            شكراً لمشاركتك في الاستبيان.
+        </p>
+
+        <!-- Result Summary -->
+        <div class="result-summary">
+            <div class="result-row">
+                <span class="result-row-label">رقم الاستجابة</span>
+                <span class="result-row-value" id="finalResponseIdDisplay" style="font-size: 0.85rem; font-family: monospace;">—</span>
+            </div>
+            <div class="result-row">
+                <span class="result-row-label">Confidence Score</span>
+                <span class="result-row-value"><span id="finalScoreDisplay">—</span> / 100</span>
+            </div>
+            <div class="result-row">
+                <span class="result-row-label">مستوى جودة البيانات</span>
+                <span id="finalQualityDisplay" class="result-row-value quality-badge high">—</span>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="/survey" class="btn btn-primary">إجراء استبيان جديد</a>
+            <a href="/dashboard" class="btn btn-secondary">عرض لوحة التحكم</a>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

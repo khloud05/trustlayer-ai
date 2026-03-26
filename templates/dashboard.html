@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة التحكم — TrustLayer AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="navbar-inner">
+        <a href="/" class="navbar-brand">
+            <img src="/static/images/logo.svg" alt="TrustLayer AI" class="brand-logo" />
+        </a>
+        <ul class="navbar-links">
+            <li><a href="/">الصفحة الرئيسية</a></li>
+            <li><a href="/how-it-works">كيف يعمل النظام؟</a></li>
+            <li><a href="/use-system">استخدم النظام</a></li>
+            <li><a href="/dashboard" class="active">لوحة التحكم</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div id="dashboardContent" class="page-wrapper">
+    <div class="container">
+
+        <div style="margin-bottom: 36px;">
+            <div class="section-label">الإحصائيات والأداء</div>
+            <h1 class="page-title">لوحة التحكم</h1>
+            <p style="color: var(--text-light); font-size: 0.95rem;">نظرة عامة على أداء نظام التحقق وجودة البيانات المجمعة</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="dashboard-section">
+            <div class="section-title">ملخص الاستجابات</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">عدد الاستجابات الكلي</div>
+                    <div class="stat-value primary" id="statTotalResponses">—</div>
+                    <div class="stat-sublabel">إجمالي الاستبيانات المُرسَلة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">متوسط Confidence Score</div>
+                    <div class="stat-value" id="statAvgScore">—</div>
+                    <div class="stat-sublabel">متوسط نقاط الثقة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">عدد الاستجابات عالية الجودة</div>
+                    <div class="stat-value success" id="statHighQuality">—</div>
+                    <div class="stat-sublabel">نقاط ثقة ≥ 90</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">عدد الاستجابات منخفضة الجودة</div>
+                    <div class="stat-value danger" id="statLowQuality">—</div>
+                    <div class="stat-sublabel">نقاط ثقة أقل من 70</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Validation Statistics -->
+        <div class="dashboard-section">
+            <div class="section-title">إحصائيات التحقق</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="statPrecision">—</div>
+                    <div class="metric-label">Precision</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="statRecall">—</div>
+                    <div class="metric-label">Recall</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="statCorrectionRate">—</div>
+                    <div class="metric-label">معدل التصحيح</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="statCompletionRate">—</div>
+                    <div class="metric-label">معدل الإكمال</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="statTimeSaved">—</div>
+                    <div class="metric-label">الوقت المُوفَّر</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" style="font-size: 1.3rem;" id="statOverallQuality">—</div>
+                    <div class="metric-label">جودة البيانات الكلية</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Quality Section -->
+        <div class="dashboard-section">
+            <div class="section-title">جودة البيانات</div>
+
+            <div class="stats-grid" style="margin-bottom: 20px;">
+                <div class="stat-card">
+                    <div class="stat-label">استجابات صالحة</div>
+                    <div class="stat-value success" id="statValid">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">استجابات مُعلَّمة</div>
+                    <div class="stat-value warning" id="statFlagged">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">استجابات متوسطة الجودة</div>
+                    <div class="stat-value warning" id="statMediumQuality">—</div>
+                    <div class="stat-sublabel">نقاط ثقة 70–89</div>
+                </div>
+            </div>
+
+            <!-- Quality Distribution -->
+            <div>
+                <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-medium); margin-bottom: 12px;">توزيع مستويات الجودة</div>
+                <div class="quality-distribution">
+                    <div class="quality-bar high">
+                        <div class="bar-value" id="distHighQuality">—</div>
+                        <div class="bar-label">عالية</div>
+                    </div>
+                    <div class="quality-bar medium">
+                        <div class="bar-value" id="distMediumQuality">—</div>
+                        <div class="bar-label">متوسطة</div>
+                    </div>
+                    <div class="quality-bar low">
+                        <div class="bar-value" id="distLowQuality">—</div>
+                        <div class="bar-label">منخفضة</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        TrustLayer AI — نظام ضمان جودة بيانات الاستبيانات
+        <div class="footer-team">تم التطوير بواسطة فريق بالمرصاد</div>
+    </div>
+</footer>
+
+<script src="/static/js/app.js"></script>
+<script>
+    // Extra: sync quality distribution bars with the stats
+    document.addEventListener("DOMContentLoaded", function () {
+        var origRender = window.renderDashboard;
+        // Extend renderDashboard to also fill distribution bars
+        fetch("/api/dashboard-stats")
+            .then(function (r) { return r.json(); })
+            .then(function (stats) {
+                var setT = function (id, val) {
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = val;
+                };
+                setT("statTotalResponses", stats.total_responses || 0);
+                setT("statAvgScore", (stats.avg_confidence_score || 0) + "%");
+                setT("statHighQuality", stats.high_quality_count || 0);
+                setT("statMediumQuality", stats.medium_quality_count || 0);
+                setT("statLowQuality", stats.low_quality_count || 0);
+                setT("statFlagged", stats.flagged_count || 0);
+                setT("statValid", stats.valid_count || 0);
+                setT("statPrecision", (stats.precision || 0) + "%");
+                setT("statRecall", (stats.recall || 0) + "%");
+                setT("statCorrectionRate", (stats.correction_rate || 0) + "%");
+                setT("statCompletionRate", (stats.completion_rate || 0) + "%");
+                setT("statTimeSaved", stats.time_saved || "0%");
+                setT("statOverallQuality", stats.overall_data_quality || "—");
+                // Distribution bars
+                setT("distHighQuality", stats.high_quality_count || 0);
+                setT("distMediumQuality", stats.medium_quality_count || 0);
+                setT("distLowQuality", stats.low_quality_count || 0);
+            })
+            .catch(function (err) { console.error("Dashboard error:", err); });
+    });
+</script>
+
+</body>
+</html>

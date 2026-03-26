@@ -1,0 +1,209 @@
+{
+  "domain": "consumer_goods_dairy",
+  "domain_label": "سلع استهلاكية — منتجات الألبان والمشروبات",
+  "version": "1.0",
+  "updated_at": "2026-03-26",
+  "questions": [
+    {
+      "id": "monthly_income",
+      "text": "ما هو الدخل الشهري التقريبي (بالريال السعودي)؟",
+      "options": [
+        {"value": "less_than_3000", "label": "أقل من 3000 ريال"},
+        {"value": "from_3000_to_7000", "label": "من 3000 إلى 7000 ريال"},
+        {"value": "from_7001_to_15000", "label": "من 7001 إلى 15000 ريال"},
+        {"value": "above_15000", "label": "أكثر من 15000 ريال"}
+      ]
+    },
+    {
+      "id": "luxury_purchase_frequency",
+      "text": "كم مرة تشتري منتجات أو سلعاً فاخرة (مثل الساعات والحقائب الفاخرة) خلال السنة؟",
+      "options": [
+        {"value": "never", "label": "لا أشتريها"},
+        {"value": "once_per_year", "label": "مرة في السنة"},
+        {"value": "several_times_per_year", "label": "عدة مرات في السنة"},
+        {"value": "monthly", "label": "شهرياً"}
+      ]
+    },
+    {
+      "id": "internet_usage",
+      "text": "هل تستخدم الإنترنت بشكل منتظم في حياتك اليومية؟",
+      "options": [
+        {"value": "yes", "label": "نعم"},
+        {"value": "no", "label": "لا"}
+      ]
+    },
+    {
+      "id": "app_evaluation",
+      "text": "كيف تقيّم استخدامك لتطبيقات الهاتف أو التطبيقات الرقمية المتعلقة بالتسوق أو الخدمات؟",
+      "options": [
+        {"value": "excellent", "label": "ممتاز"},
+        {"value": "good", "label": "جيد"},
+        {"value": "average", "label": "متوسط"},
+        {"value": "poor", "label": "ضعيف"},
+        {"value": "not_applicable", "label": "لا ينطبق عليّ"}
+      ]
+    },
+    {
+      "id": "tv_usage",
+      "text": "هل تشاهد التلفاز بشكل منتظم؟",
+      "options": [
+        {"value": "yes", "label": "نعم"},
+        {"value": "no", "label": "لا"}
+      ]
+    },
+    {
+      "id": "favorite_tv_channels",
+      "text": "ما نوع القنوات التلفزيونية التي تفضل مشاهدتها عادةً؟",
+      "options": [
+        {"value": "sports", "label": "رياضية"},
+        {"value": "news", "label": "إخبارية"},
+        {"value": "entertainment", "label": "ترفيهية"},
+        {"value": "cultural", "label": "ثقافية وتعليمية"},
+        {"value": "none", "label": "لا أفضل نوعاً بعينه"}
+      ]
+    },
+    {
+      "id": "purchase_frequency",
+      "text": "كم مرة في الشهر تقوم بشراء منتجات الألبان أو المشروبات (مثل الحليب، العصير، الزبادي)؟",
+      "options": [
+        {"value": "once", "label": "مرة واحدة فقط في الشهر"},
+        {"value": "two_to_three", "label": "من 2 إلى 3 مرات في الشهر"},
+        {"value": "four_to_six", "label": "من 4 إلى 6 مرات في الشهر"},
+        {"value": "more_than_six", "label": "أكثر من 6 مرات في الشهر (أي أسبوعياً أو أكثر)"}
+      ]
+    },
+    {
+      "id": "monthly_spending",
+      "text": "ما المبلغ الذي تنفقه تقريباً شهرياً على شراء منتجات الألبان أو المشروبات؟",
+      "options": [
+        {"value": "less_than_50", "label": "أقل من 50 ريال شهرياً"},
+        {"value": "from_50_to_100", "label": "من 50 إلى 100 ريال شهرياً"},
+        {"value": "from_100_to_300", "label": "من 100 إلى 300 ريال شهرياً"},
+        {"value": "more_than_300", "label": "أكثر من 300 ريال شهرياً"}
+      ]
+    },
+    {
+      "id": "brand_preference",
+      "text": "ما العلامة التجارية لمنتجات الألبان أو المشروبات التي تفضل شراءها عادةً؟",
+      "options": [
+        {"value": "nestle", "label": "نستله"},
+        {"value": "almarai", "label": "المراعي"},
+        {"value": "nada", "label": "ندى"},
+        {"value": "other", "label": "علامة تجارية أخرى"}
+      ]
+    },
+    {
+      "id": "last_purchase",
+      "text": "ما آخر علامة تجارية لمنتجات الألبان أو المشروبات قمت بشرائها فعلياً؟",
+      "options": [
+        {"value": "nestle", "label": "نستله"},
+        {"value": "almarai", "label": "المراعي"},
+        {"value": "nada", "label": "ندى"},
+        {"value": "other", "label": "علامة تجارية أخرى"}
+      ]
+    },
+    {
+      "id": "purchase_reason",
+      "text": "ما السبب الرئيسي الذي يدفعك لشراء منتجات الألبان أو المشروبات من علامة تجارية معينة؟",
+      "options": [
+        {"value": "price", "label": "السعر المناسب"},
+        {"value": "quality", "label": "الجودة العالية"},
+        {"value": "brand", "label": "الولاء للعلامة التجارية"},
+        {"value": "availability", "label": "التوفر وسهولة الحصول عليه"}
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "R-01",
+      "name": "income_vs_luxury_spending",
+      "type": "field_value_conflict",
+      "issue_type": "logical_conflict",
+      "field_a": "monthly_income",
+      "values_a": ["less_than_3000"],
+      "field_b": "luxury_purchase_frequency",
+      "values_b": ["once_per_year", "several_times_per_year", "monthly"],
+      "field_names": ["monthly_income", "luxury_purchase_frequency"],
+      "severity": "High",
+      "deduction": 30,
+      "ar_message": "لاحظنا تعارضاً بين مستوى الدخل المصرح به ونمط شراء السلع الفاخرة.",
+      "ar_explanation": "الدخل الشهري المنخفض لا يتوافق منطقياً مع تكرار شراء السلع الفاخرة.",
+      "ar_action_suggested": "يرجى مراجعة بيانات الدخل أو تكرار شراء السلع الفاخرة."
+    },
+    {
+      "id": "R-02",
+      "name": "internet_usage_vs_app_evaluation",
+      "type": "field_value_conflict",
+      "issue_type": "logical_conflict",
+      "field_a": "internet_usage",
+      "values_a": ["no"],
+      "field_b": "app_evaluation",
+      "values_b": ["excellent", "good", "average", "poor"],
+      "field_names": ["internet_usage", "app_evaluation"],
+      "severity": "Medium",
+      "deduction": 15,
+      "ar_message": "لاحظنا أنك ذكرت أنك لا تستخدم الإنترنت، لكنك قمت بتقييم تطبيقات الهاتف.",
+      "ar_explanation": "لا يمكن تقييم تطبيقات الهاتف أو التطبيقات الرقمية بشكل منطقي إذا كانت إجابة استخدام الإنترنت هي \"لا\".",
+      "ar_action_suggested": "يرجى مراجعة إجابة استخدام الإنترنت أو تقييم التطبيقات."
+    },
+    {
+      "id": "R-03",
+      "name": "tv_usage_vs_favorite_channels",
+      "type": "field_value_conflict",
+      "issue_type": "logical_conflict",
+      "field_a": "tv_usage",
+      "values_a": ["no"],
+      "field_b": "favorite_tv_channels",
+      "values_b": ["sports", "news", "entertainment", "cultural"],
+      "field_names": ["tv_usage", "favorite_tv_channels"],
+      "severity": "Medium",
+      "deduction": 15,
+      "ar_message": "لاحظنا أنك ذكرت أنك لا تشاهد التلفاز، لكنك حددت قنوات تلفزيونية مفضلة.",
+      "ar_explanation": "لا يتوافق عدم مشاهدة التلفاز مع تحديد قنوات تلفزيونية مفضلة.",
+      "ar_action_suggested": "يرجى مراجعة إجابة مشاهدة التلفاز أو القنوات المفضلة."
+    },
+    {
+      "id": "R-04",
+      "name": "purchase_vs_spending_consistency",
+      "type": "field_value_conflict",
+      "issue_type": "logical_conflict",
+      "field_a": "purchase_frequency",
+      "values_a": ["more_than_six"],
+      "field_b": "monthly_spending",
+      "values_b": ["less_than_50"],
+      "field_names": ["purchase_frequency", "monthly_spending"],
+      "severity": "Medium",
+      "deduction": 15,
+      "ar_message": "لاحظنا تعارضاً بين عدد مرات الشراء ومستوى الإنفاق الشهري.",
+      "ar_explanation": "عدد مرات الشراء الشهري مرتفع بينما مستوى الإنفاق الشهري منخفض بشكل غير متوافق.",
+      "ar_action_suggested": "يرجى مراجعة عدد مرات الشراء أو قيمة الإنفاق الشهري."
+    },
+    {
+      "id": "R-05",
+      "name": "brand_preference_vs_last_purchase",
+      "type": "field_inequality",
+      "issue_type": "logical_warning",
+      "field_a": "brand_preference",
+      "field_b": "last_purchase",
+      "field_names": ["brand_preference", "last_purchase"],
+      "severity": "Low",
+      "deduction": 10,
+      "ar_message": "لاحظنا اختلافاً بين العلامة التجارية المفضلة وآخر علامة تجارية تم شراؤها.",
+      "ar_explanation": "قد يكون هذا الاختلاف طبيعياً، لكنه قد يشير إلى عدم اتساق في الإجابات.",
+      "ar_action_suggested": "يرجى التأكد من صحة العلامة التجارية المفضلة وآخر عملية شراء."
+    },
+    {
+      "id": "R-06",
+      "name": "response_speed_behavior",
+      "type": "response_time",
+      "issue_type": "behavioral_anomaly",
+      "threshold_seconds": 15,
+      "field_names": ["response_time_seconds"],
+      "severity": "Low",
+      "deduction": 5,
+      "ar_message": "تم رصد سرعة غير طبيعية في تعبئة الاستبيان.",
+      "ar_explanation": "قد تشير سرعة الإجابة العالية جداً إلى عدم قراءة الأسئلة بعناية.",
+      "ar_action_suggested": "يرجى مراجعة الإجابات قبل الإرسال النهائي."
+    }
+  ]
+}

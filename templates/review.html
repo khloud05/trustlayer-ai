@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مراجعة الإجابات — TrustLayer AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- Loading Spinner -->
+<div id="spinnerOverlay" class="spinner-overlay">
+    <div class="spinner"></div>
+    <div class="spinner-text">جارٍ إعادة التحقق...</div>
+</div>
+
+<div id="reviewContent" class="page-wrapper">
+    <div class="review-container" style="padding: 0 16px;">
+
+        <!-- Page Header -->
+        <div style="text-align: center; margin-bottom: 28px;">
+            <div class="section-label">نتائج التحقق</div>
+            <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-dark);">مراجعة الإجابات</h1>
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 6px;">فيما يلي نتائج تحليل إجاباتك بواسطة نظام TrustLayer AI</p>
+        </div>
+
+        <!-- Score Card -->
+        <div class="score-card">
+            <div id="scoreCircle" class="score-circle high">
+                <div id="scoreNumber" class="score-number">—</div>
+                <div class="score-label">/ 100</div>
+            </div>
+            <div id="qualityBadge" class="quality-badge high">جودة عالية</div>
+            <p id="scoreDescription" class="score-description" style="margin-top: 10px;">جارٍ التحميل...</p>
+        </div>
+
+        <!-- Issues Section -->
+        <div class="issues-section">
+            <div id="issuesTitle" class="issues-title">
+                المشكلات المكتشفة
+            </div>
+            <div id="issuesList">
+                <!-- Dynamically populated by JS -->
+                <div style="text-align: center; padding: 32px; color: var(--text-light);">
+                    <div class="spinner" style="margin: 0 auto 12px;"></div>
+                    <p>جارٍ تحميل النتائج...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="review-actions">
+            <button type="button" id="editBtn" class="btn btn-secondary">
+                ← تعديل الإجابات
+            </button>
+            <button type="button" id="revalidateBtn" class="btn btn-secondary">
+                ↺ إعادة التحقق
+            </button>
+            <button type="button" id="confirmBtn" class="btn btn-primary">
+                تأكيد الإرسال ✓
+            </button>
+        </div>
+
+        <div style="text-align: center; margin-top: 16px;">
+            <p style="font-size: 0.8rem; color: var(--text-light);">
+                بالضغط على "تأكيد الإرسال"، توافق على حفظ إجاباتك في النظام.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

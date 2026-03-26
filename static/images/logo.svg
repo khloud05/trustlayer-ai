@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" fill="none">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="tgrad" x1="52" y1="0" x2="160" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F0F0FF"/>
+      <stop offset="100%" stop-color="#C4B5FD"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Icon Mark: 44x44 abstract layered intelligence symbol -->
+
+  <!-- Outer subtle glow ring -->
+  <circle cx="22" cy="22" r="20" fill="url(#grad)" opacity="0.07"/>
+
+  <!-- Data layer bars — top -->
+  <rect x="7" y="10" width="30" height="2.5" rx="1.25" fill="url(#grad)" opacity="0.35"/>
+  <!-- Data layer bars — upper middle -->
+  <rect x="5" y="15" width="34" height="2.5" rx="1.25" fill="url(#grad)" opacity="0.55"/>
+  <!-- Data layer bars — center (main) -->
+  <rect x="5" y="20.5" width="34" height="3" rx="1.5" fill="url(#grad)" opacity="0.85"/>
+  <!-- Data layer bars — lower middle -->
+  <rect x="5" y="26" width="34" height="2.5" rx="1.25" fill="url(#grad)" opacity="0.55"/>
+  <!-- Data layer bars — bottom -->
+  <rect x="7" y="31" width="30" height="2.5" rx="1.25" fill="url(#grad)" opacity="0.35"/>
+
+  <!-- Vertical connector — suggests "T" and unity through layers -->
+  <rect x="20.25" y="10" width="3.5" height="24" rx="1.75" fill="url(#grad)" opacity="0.2"/>
+
+  <!-- Central AI node — the intelligence core -->
+  <circle cx="22" cy="22" r="6.5" fill="url(#grad)" opacity="0.2" filter="url(#glow)"/>
+  <circle cx="22" cy="22" r="4" fill="url(#grad)"/>
+  <circle cx="22" cy="22" r="1.8" fill="white" opacity="0.9"/>
+
+  <!-- Satellite nodes — representing connected data points -->
+  <circle cx="8"  cy="22" r="2" fill="url(#grad)" opacity="0.7"/>
+  <circle cx="36" cy="22" r="2" fill="url(#grad)" opacity="0.7"/>
+  <line x1="10" y1="22" x2="18" y2="22" stroke="url(#grad)" stroke-width="1" opacity="0.5"/>
+  <line x1="26" y1="22" x2="34" y2="22" stroke="url(#grad)" stroke-width="1" opacity="0.5"/>
+
+  <!-- Logo Text: TrustLayer AI -->
+  <text x="52" y="17" font-family="Cairo, Arial, sans-serif" font-size="13" font-weight="800" fill="url(#tgrad)" letter-spacing="0.3">TrustLayer</text>
+  <text x="52" y="33" font-family="Cairo, Arial, sans-serif" font-size="11" font-weight="500" fill="#6B7FE0" letter-spacing="1.5">AI SYSTEM</text>
+</svg>

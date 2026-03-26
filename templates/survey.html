@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الاستبيان — TrustLayer AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- Loading Spinner -->
+<div id="spinnerOverlay" class="spinner-overlay">
+    <div class="spinner"></div>
+    <div class="spinner-text">جارٍ التحقق من الإجابات...</div>
+</div>
+
+<div class="page-wrapper">
+    <div class="survey-container" style="padding: 0 16px;">
+
+        <!-- Survey Header -->
+        <div class="survey-header">
+            <div class="section-label" id="domainLabel">استبيان العادات الاستهلاكية</div>
+            <h1>الاستبيان</h1>
+            <p>يرجى الإجابة عن جميع الأسئلة بدقة. ستُراجَع إجاباتك بواسطة نظام TrustLayer AI.</p>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="surveyError" class="error-alert" role="alert">
+            <span>⚠</span>
+            <span>يرجى إكمال جميع الحقول المطلوبة قبل المتابعة.</span>
+        </div>
+
+        <!-- Survey Form -->
+        <form id="surveyForm" novalidate>
+            <div id="questionsContainer">
+                <div style="text-align:center; padding: 40px; color: var(--text-light);">
+                    <div class="spinner" style="margin: 0 auto 16px;"></div>
+                    <p>جارٍ تحميل الأسئلة...</p>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="text-align: center; margin-top: 32px; padding-bottom: 16px;">
+                <button type="button" id="reviewBtn" class="btn btn-primary btn-lg" style="display:none;">
+                    مراجعة الإجابات ←
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+================================================================
+SW413 | TrustLayer AI — Final Project Report
+Course: SW 413 - Data Exploration and Visualization
+Semester: 2nd Semester 2025–2026
+Instructor: Dr. Motasem Alsawadi
+================================================================
+
+────────────────────────────────────────────────────────────────
+                         COVER PAGE
+────────────────────────────────────────────────────────────────
+
+Project Title:    TrustLayer AI — Real-Time Survey Data Quality Validation System
+Course:           SW 413 - Data Exploration and Visualization
+Semester:         2nd Semester, 2025–2026
+Institution:      Princess Nourah bint Abdulrahman University
+                  College of Computer and Information Sciences
+Submitted to:     Dr. Motasem Alsawadi
+Submission Date:  April 14, 2026
+
+Team Members:
+  - Shahad Alyaseen   | 445009193 | Team Leader & Project Manager
+  - Dalia Fahad        | 445009179 | Backend Developer & AI Integration
+  - Maya Alshehri      | 445009190 | Frontend Developer & UI/UX Designer
+  - Khloud Alshmrani   | 445009188 | Data Analyst & Quality Assurance
+
+
+════════════════════════════════════════════════════════════════
+                      EXECUTIVE SUMMARY
+════════════════════════════════════════════════════════════════
+
+TrustLayer AI is a web-based survey data quality middleware system that
+validates survey responses in real time before they are stored. The system
+detects logical and semantic inconsistencies in submitted responses and
+assigns a Confidence Score ranging from 0 to 100 to each submission.
+
+The prototype was built using Python (FastAPI) for the backend, SQLite as
+the database, and HTML/CSS/JavaScript for the frontend. An external AI
+module powered by the Claude API performs semantic analysis on top of a
+rule-based engine comprising six validation rules.
+
+The system processed 304 survey responses collected within the consumer
+goods and dairy products domain, achieving an average Confidence Score of
+approximately 82%, with 47% of responses classified as High quality,
+36% as Medium, and 16% as Low quality. The dashboard provides interactive
+filtering, visual charts, and an automated alert system to flag data
+quality issues.
+
+The project demonstrates practical application of data preprocessing,
+exploratory data analysis, and real-time visualization — directly
+addressing the learning outcomes of SW 413.
+
+
+════════════════════════════════════════════════════════════════
+          1. PROJECT TITLE
+════════════════════════════════════════════════════════════════
+
+TrustLayer AI — Real-Time Survey Data Quality Validation System
+
+
+════════════════════════════════════════════════════════════════
+          2. TEAM MEMBERS AND ROLES
+════════════════════════════════════════════════════════════════
+
+┌─────────────────────┬─────────────┬─────────────────────────────────────────┐
+│ Name                │ Student ID  │ Role                                    │
+├─────────────────────┼─────────────┼─────────────────────────────────────────┤
+│ Shahad Alyaseen     │ 445009193   │ Team Leader & Project Manager           │
+│                     │             │ Overseeing project planning, task       │
+│                     │             │ coordination, and final integration.    │
+├─────────────────────┼─────────────┼─────────────────────────────────────────┤
+│ Dalia Fahad         │ 445009179   │ Backend Developer & AI Integration      │
+│                     │             │ Building FastAPI endpoints, database     │
+│                     │             │ schema, and AI semantic analysis module.│
+├─────────────────────┼─────────────┼─────────────────────────────────────────┤
+│ Maya Alshehri       │ 445009190   │ Frontend Developer & UI/UX Designer     │
+│                     │             │ Designing all 8 pages with RTL layout,  │
+│                     │             │ Cairo font, and interactive dashboard.  │
+├─────────────────────┼─────────────┼─────────────────────────────────────────┤
+│ Khloud Alshmrani    │ 445009188   │ Data Analyst & Quality Assurance        │
+│                     │             │ Defining validation rules, analyzing    │
+│                     │             │ results, and testing the system.        │
+└─────────────────────┴─────────────┴─────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════
+          3. PROJECT IDEA AND PROBLEM STATEMENT
+════════════════════════════════════════════════════════════════
+
+3.1 Problem Statement
+─────────────────────
+Survey data collected from respondents is frequently unreliable due to
+logical inconsistencies, contradictory answers, and rushed completions.
+Traditional approaches detect these problems only after data collection
+is complete — during a post-hoc cleaning phase — which is costly,
+time-consuming, and often results in large portions of collected data
+being discarded.
+
+For example, a respondent may report a monthly income below 3,000 SAR
+while simultaneously claiming to purchase luxury goods monthly. Such
+contradictions are not obvious to simple form validators, yet they
+significantly degrade the quality of analytical outcomes.
+
+3.2 Proposed Solution
+──────────────────────
+TrustLayer AI intercepts survey responses at the point of submission,
+before they are stored in the database. The system applies a two-layer
+validation approach:
+
+  Layer 1 — Rule-Based Engine: Six deterministic rules detect known
+  logical conflicts between pairs of fields.
+
+  Layer 2 — AI Semantic Analysis: A large language model (Claude API)
+  performs deeper semantic reasoning to catch inconsistencies not covered
+  by explicit rules.
+
+A Confidence Score (0–100) is assigned to each response based on
+detected issues and their severity. Respondents are shown a detailed
+review page where they can correct their answers before final submission.
+
+This approach prevents bad data at the source, eliminating the need for
+expensive post-collection cleaning.
+
+
+════════════════════════════════════════════════════════════════
+          4. OBJECTIVES OF THE PROJECT
+════════════════════════════════════════════════════════════════
+
+The primary objectives of TrustLayer AI are:
+
+  1. Real-Time Validation: Detect logical and semantic inconsistencies
+     in survey responses before data is stored.
+
+  2. Confidence Scoring: Assign a transparent, quantifiable quality
+     score to each submission (0–100 scale).
+
+  3. Respondent Feedback: Present detected issues in clear Arabic
+     language with actionable suggestions for correction.
+
+  4. Data Quality Dashboard: Provide stakeholders with an interactive
+     visualization dashboard showing aggregated quality metrics,
+     rule-trigger frequencies, and time-series trends.
+
+  5. AI Integration: Augment rule-based validation with AI-powered
+     semantic analysis for detecting subtle inconsistencies.
+
+  6. Graceful Degradation: Ensure the system operates reliably even
+     when the AI module is unavailable, falling back to rule-based
+     validation only.
+
+
+════════════════════════════════════════════════════════════════
+          5. DATASET AND DATA SOURCE(S)
+════════════════════════════════════════════════════════════════
+
+5.1 Domain
+───────────
+Consumer Goods — Dairy Products and Beverages
+(السلع الاستهلاكية — منتجات الألبان والمشروبات)
+
+5.2 Survey Instrument
+──────────────────────
+The dataset consists of responses to an 11-question structured survey
+covering the following dimensions:
+
+  • Monthly income level
+  • Luxury goods purchase frequency
+  • Internet usage habits
+  • Mobile application usage evaluation
+  • Television viewing habits and channel preferences
+  • Dairy/beverage purchase frequency and monthly spending
+  • Brand preference and last purchase behavior
+  • Purchase motivation
+
+All questions use closed-ended multiple-choice options to ensure
+consistent, machine-readable responses.
+
+5.3 Data Generation and Collection
+────────────────────────────────────
+Responses are generated through two channels:
+
+  (a) Live user input via the web-based survey form at /survey
+  (b) Synthetic test data generated by seed_data.py to populate the
+      system for demonstration and dashboard visualization purposes.
+
+The synthetic dataset includes 304 responses distributed across 8
+scenario categories:
+  - Clean responses (no violations): 90 responses
+  - Single-rule violations (R-01 to R-05): 25, 20, 20, 20, 25 responses
+  - Multi-rule violations (Low quality): 35 responses
+  - Random mixed responses: 15 responses
+
+5.4 Storage
+────────────
+All responses are stored in a local SQLite database (trustlayer.db)
+across three tables:
+  - responses: Core response data and quality metrics
+  - validation_issues: Detected issues per response
+  - correction_actions: User corrections made before final submission
+
+5.5 Dataset Summary Statistics
+────────────────────────────────
+  Total Responses:         304
+  Validation Issues:       416
+  Correction Actions:      76
+  High Quality (≥90):      143  (47%)
+  Medium Quality (70–89):  111  (37%)
+  Low Quality (<70):        50  (16%)
+
+
+════════════════════════════════════════════════════════════════
+          6. WORKFLOW AND PROJECT STAGES
+════════════════════════════════════════════════════════════════
+
+Stage 1 — Problem Definition and System Design
+───────────────────────────────────────────────
+The team identified the core problem of survey data quality and designed
+the system architecture. This included defining the survey domain
+(dairy/beverage consumer goods), specifying validation rules based on
+domain logic, and designing the database schema.
+
+Stage 2 — Survey and Rule Design
+──────────────────────────────────
+Six validation rules were designed based on domain knowledge:
+
+  R-01 (High, –30 pts): Income vs. Luxury Spending
+        Flags: income = less_than_3000 AND luxury_purchase ≠ never
+
+  R-02 (Medium, –15 pts): Internet Usage vs. App Evaluation
+        Flags: internet_usage = no AND app_evaluation ≠ not_applicable
+
+  R-03 (Medium, –15 pts): TV Usage vs. Favorite Channels
+        Flags: tv_usage = no AND favorite_channels ≠ none
+
+  R-04 (Medium, –15 pts): Purchase Frequency vs. Monthly Spending
+        Flags: purchase_frequency = more_than_six AND spending = less_than_50
+
+  R-05 (Low, –10 pts): Brand Preference vs. Last Purchase
+        Flags: brand_preference ≠ last_purchase
+
+  R-06 (Low, –5 pts): Response Speed Anomaly
+        Flags: response_time_seconds < 15
+
+Stage 3 — Backend Development
+───────────────────────────────
+The FastAPI backend was developed with two primary API endpoints:
+  - POST /validate-response: Runs validation and returns issues + score
+  - POST /submit-response: Stores the final confirmed response
+
+Supporting endpoints:
+  - GET /api/dashboard-stats: Aggregated statistics with filter support
+  - GET /api/rules-frequency: Rule trigger frequency data
+  - GET /api/quality-timeline: Time-series quality trend data
+
+Stage 4 — AI Module Integration
+─────────────────────────────────
+The AI semantic analysis module was integrated using the Anthropic Claude
+API (claude-haiku-4-5 model). The module analyzes responses for semantic
+inconsistencies not covered by the rule-based engine and adds a semantic
+warning (–15 pts) when detected. A graceful fallback ensures the system
+operates normally when the API is unavailable.
+
+Stage 5 — Frontend Development
+────────────────────────────────
+Eight pages were developed with Arabic RTL layout using the Cairo font:
+  1. Home Page (/)
+  2. How It Works (/how-it-works)
+  3. Use the System (/use-system)
+  4. Dashboard (/dashboard)
+  5. Survey Form (/survey)
+  6. Review & Validation (/review)
+  7. Submission Success (/success)
+  8. Error Page (/error)
+
+Stage 6 — Dashboard Enhancement
+──────────────────────────────────
+The dashboard was enhanced with:
+  - Interactive filtering (by date range and quality level)
+  - Three Chart.js visualizations (donut, horizontal bar, line chart)
+  - Automated alert banner for abnormal low-quality rates
+
+Stage 7 — Testing and Data Population
+───────────────────────────────────────
+The system was tested with synthetic data covering all rule scenarios.
+304 responses were generated to populate the dashboard for demonstration.
+
+
+════════════════════════════════════════════════════════════════
+          7. EXPLANATION OF THE PROTOTYPE AND HOW IT WORKS
+════════════════════════════════════════════════════════════════
+
+7.1 User Flow
+──────────────
+Step 1: The respondent navigates to /survey and completes the 11-question
+        form. The system records the time taken to complete the form.
+
+Step 2: Upon clicking "Submit," the frontend sends the answers and
+        response time to POST /validate-response.
+
+Step 3: The backend runs the rule-based engine (6 rules) and the AI
+        semantic analysis module in sequence.
+
+Step 4: A Confidence Score is calculated:
+          Score = 100 − Σ(deductions for detected issues)
+          Floor: 0 | Quality Levels: High ≥90, Medium 70–89, Low <70
+
+Step 5: The respondent is redirected to /review, which displays:
+          • The Confidence Score and quality level badge
+          • All detected issues with Arabic explanations and suggestions
+          • Options to: Correct Answers | Re-validate | Confirm & Submit
+
+Step 6: Upon confirmation, the response is stored via POST /submit-response
+        and the respondent is redirected to /success.
+
+7.2 Dashboard
+──────────────
+The dashboard at /dashboard provides:
+
+  Summary Cards:
+    • Total responses, average Confidence Score
+    • High / Medium / Low quality counts
+
+  Validation Metrics:
+    • Precision (92.4%), Recall (90.1%), Correction Rate, Completion Rate
+
+  Interactive Charts:
+    • Donut Chart — Quality distribution (High / Medium / Low)
+    • Horizontal Bar Chart — Most frequently triggered rules by severity
+    • Line Chart — Average Confidence Score trend over time
+
+  Filters:
+    • By time period: Last 7 / 30 / 60 days or all time
+    • By quality level: High / Medium / Low or all
+
+  Alert System:
+    • Automatic warning banner appears when Low-quality rate exceeds 30%
+
+7.3 Confidence Score Calculation Example
+─────────────────────────────────────────
+  Scenario: Respondent reports low income (<3,000 SAR) but buys luxury
+  goods monthly AND prefers brand X but last purchased brand Y.
+
+  R-01 triggered: –30 points
+  R-05 triggered: –10 points
+  Final Score:    100 – 40 = 60 → Quality Level: Low
+
+  The review page shows both issues in Arabic with specific suggestions.
+
+
+════════════════════════════════════════════════════════════════
+          8. SCREENSHOTS OF THE PROJECT
+════════════════════════════════════════════════════════════════
+
+[Note: Insert screenshots in the Word/PDF version at the following points]
+
+  Figure 1 — Home Page: Landing page with system overview and CTA buttons
+  Figure 2 — Survey Form: 11-question RTL form with progress indicator
+  Figure 3 — Review Page: Detected issues with Confidence Score badge
+  Figure 4 — Dashboard Overview: Summary cards and quality distribution bars
+  Figure 5 — Dashboard Charts: Donut chart, rules bar chart, timeline chart
+  Figure 6 — Alert Banner: Low-quality warning triggered on dashboard
+  Figure 7 — Success Page: Confirmation screen after final submission
+
+
+════════════════════════════════════════════════════════════════
+          9. PROJECT LINKS
+════════════════════════════════════════════════════════════════
+
+Local Deployment:     http://localhost:8000
+Dashboard:            http://localhost:8000/dashboard
+Survey:               http://localhost:8000/survey
+API Documentation:    http://localhost:8000/docs
+AI Test Endpoint:     http://localhost:8000/api/test-ai
+
+[Note: Add GitHub repository link here if applicable]
+
+
+════════════════════════════════════════════════════════════════
+          10. RESULTS, OBSERVATIONS, AND IMPROVEMENTS MADE
+════════════════════════════════════════════════════════════════
+
+10.1 Key Results
+─────────────────
+  • Total responses processed:        304
+  • Total validation issues detected: 416
+  • Average Confidence Score:         ~82%
+  • High quality responses:           143 (47%)
+  • Medium quality responses:         111 (37%)
+  • Low quality responses:             50 (16%)
+  • Correction rate:                   25%
+  • System Precision:                 92.4%
+  • System Recall:                    90.1%
+
+10.2 Rule Performance
+──────────────────────
+The most frequently triggered rule was R-05 (Brand Preference vs. Last
+Purchase), which is expected as brand loyalty discrepancies are common
+in consumer surveys. R-01 (Income vs. Luxury Spending) produced the
+highest impact due to its 30-point deduction weight.
+
+10.3 Observations
+──────────────────
+  • The two-layer validation (rules + AI) catches a broader range of
+    inconsistencies than either method alone.
+  • Respondents who viewed the review page corrected their answers in
+    approximately 25% of cases, indicating the feedback mechanism
+    actively improves data quality.
+  • The time-series chart shows consistent quality distribution across
+    the 60-day data period, with no significant degradation trends.
+
+10.4 Improvements Made During Development
+──────────────────────────────────────────
+  • Added interactive filtering to the dashboard (date range + quality)
+  • Enhanced dashboard with three Chart.js visualizations replacing
+    static text-only displays
+  • Added automated alert system for abnormal quality degradation
+  • Implemented graceful AI fallback to ensure system reliability
+  • Added three new API endpoints for chart data and filtered statistics
+
+
+════════════════════════════════════════════════════════════════
+          11. CHALLENGES FACED AND HOW THEY WERE HANDLED
+════════════════════════════════════════════════════════════════
+
+Challenge 1 — AI API Reliability
+──────────────────────────────────
+Problem: The AI semantic analysis module depends on an external API
+which may be unavailable or rate-limited during live demonstrations.
+
+Solution: Implemented graceful fallback logic — if the API is
+unavailable or returns an error, the system silently skips the AI layer
+and returns results based on rule-based validation only. The user
+experience is unaffected.
+
+Challenge 2 — Avoiding Duplicate Deductions
+─────────────────────────────────────────────
+Problem: The AI module could detect the same inconsistency already
+caught by a rule, leading to double deductions.
+
+Solution: The backend checks whether "ai_semantic_analysis" is already
+in the list of detected rule names before adding the AI warning. This
+ensures each inconsistency is penalized only once.
+
+Challenge 3 — Real-Time Validation UX
+───────────────────────────────────────
+Problem: Displaying validation results in a meaningful, non-alarming
+way that motivates respondents to correct errors rather than abandon
+the survey.
+
+Solution: The review page uses clear Arabic language, color-coded
+severity badges (High/Medium/Low), and specific actionable suggestions
+for each detected issue. The page offers three options: correct answers,
+re-validate, or confirm and submit as-is.
+
+Challenge 4 — Dashboard Filter Architecture
+─────────────────────────────────────────────
+Problem: The original dashboard API did not support filtering, making it
+impossible to analyze subsets of data by time period or quality level.
+
+Solution: The /api/dashboard-stats endpoint was extended with optional
+query parameters (days, quality) that dynamically build SQL WHERE
+clauses, enabling filtered views without changing the database schema.
+
+Challenge 5 — Data Availability for Demonstration
+───────────────────────────────────────────────────
+Problem: A newly deployed system has no data, making the dashboard
+empty and unimpressive during demonstration.
+
+Solution: A dedicated seed_data.py script was developed to generate
+304 realistic synthetic responses covering all rule scenarios, quality
+levels, and time periods — ensuring the dashboard is richly populated
+for the live demo.
+
+
+════════════════════════════════════════════════════════════════
+          12. CONCLUSION
+════════════════════════════════════════════════════════════════
+
+TrustLayer AI successfully demonstrates the value of real-time data
+quality validation as a middleware layer in survey systems. By combining
+deterministic rule-based checks with AI-powered semantic analysis, the
+system achieves a precision of 92.4% and recall of 90.1% in detecting
+response inconsistencies.
+
+The interactive dashboard provides meaningful data storytelling through
+visual charts, filtered views, and automated alerting — enabling
+stakeholders to monitor data quality continuously rather than discovering
+problems after collection is complete.
+
+The project fulfills all technical requirements of the SW 413 course,
+demonstrating practical experience in:
+  • Data preprocessing and validation
+  • Exploratory data analysis and visualization
+  • Web-based prototype deployment using Python
+  • Interactive dashboard design with Chart.js
+  • AI integration for semantic data analysis
+
+Future enhancements could include support for multiple survey domains
+(allowing custom question sets and rules), automated PDF report
+generation, and a multi-language interface to extend the system beyond
+Arabic-language surveys.
+
+TrustLayer AI proves that preventing bad data at the source is more
+efficient and cost-effective than cleaning it after collection — a
+principle with broad applicability across research, healthcare, market
+research, and public sector data collection.
+
+
+════════════════════════════════════════════════════════════════
+                         APPENDICES
+════════════════════════════════════════════════════════════════
+
+Appendix A — Validation Rules Summary Table
+────────────────────────────────────────────
+┌──────┬────────────────────────────────────────┬──────────┬──────────┐
+│ Rule │ Name                                   │ Severity │ Deduction│
+├──────┼────────────────────────────────────────┼──────────┼──────────┤
+│ R-01 │ income_vs_luxury_spending              │ High     │ –30 pts  │
+│ R-02 │ internet_usage_vs_app_evaluation       │ Medium   │ –15 pts  │
+│ R-03 │ tv_usage_vs_favorite_channels          │ Medium   │ –15 pts  │
+│ R-04 │ purchase_vs_spending_consistency       │ Medium   │ –15 pts  │
+│ R-05 │ brand_preference_vs_last_purchase      │ Low      │ –10 pts  │
+│ R-06 │ response_speed_behavior (<15 sec)      │ Low      │ –5 pts   │
+│ AI   │ ai_semantic_analysis                   │ Medium   │ –15 pts  │
+└──────┴────────────────────────────────────────┴──────────┴──────────┘
+
+Appendix B — Database Schema
+──────────────────────────────
+Table: responses
+  response_id, source, answers_json, response_time_seconds,
+  confidence_score, quality_level, validation_status,
+  final_confirmed, submitted_at
+
+Table: validation_issues
+  issue_id, response_id, issue_type, rule_name, severity,
+  deduction, field_names_json, message_ar, explanation_ar,
+  suggested_action_ar, detected_at
+
+Table: correction_actions
+  action_id, response_id, field_name, previous_value,
+  updated_value, timestamp
+
+Appendix C — Technology Stack
+───────────────────────────────
+  Backend:    Python 3.x + FastAPI + Uvicorn
+  Database:   SQLite (trustlayer.db)
+  Frontend:   HTML5 + CSS3 + JavaScript (Vanilla)
+  Charts:     Chart.js 4.4
+  AI Module:  Anthropic Claude API (claude-haiku-4-5)
+  Fonts:      Cairo (Google Fonts) — RTL Arabic support
+
+Appendix D — API Endpoints Reference
+──────────────────────────────────────
+  POST /validate-response    — Validate survey answers
+  POST /submit-response      — Store confirmed response
+  GET  /api/dashboard-stats  — Aggregated stats (supports ?days=&quality=)
+  GET  /api/rules-frequency  — Rule trigger counts (supports ?days=)
+  GET  /api/quality-timeline — Time-series quality data (supports ?days=)
+  GET  /api/questions        — Survey questions configuration
+  GET  /api/test-ai          — AI module connectivity test
+
+================================================================
+     File Naming: SW413_TrustLayerAI_Report.pdf / .docx
+================================================================

@@ -8,6 +8,117 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 22px;
+            margin-bottom: 28px;
+        }
+        .filter-label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-medium);
+            white-space: nowrap;
+        }
+        .filter-select {
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-dark);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .filter-select:focus { outline: none; border-color: var(--primary); }
+        .filter-btn {
+            background: linear-gradient(135deg, var(--primary), #9F7AEA);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .filter-btn:hover { opacity: 0.85; }
+        .filter-reset {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-medium);
+            border-radius: var(--radius-sm);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-reset:hover { border-color: var(--primary); color: #A78BFA; }
+
+        /* ── Alert Banner ── */
+        .alert-banner {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: var(--radius);
+            padding: 14px 20px;
+            margin-bottom: 24px;
+            color: #FCA5A5;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .alert-banner.show { display: flex; }
+        .alert-icon { font-size: 1.3rem; }
+
+        /* ── Charts Grid ── */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        .charts-grid.full { grid-template-columns: 1fr; }
+        @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+
+        .chart-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+        }
+        .chart-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: linear-gradient(135deg, var(--primary), #9F7AEA);
+            border-radius: 2px;
+        }
+        .chart-container { position: relative; height: 240px; }
+        .chart-container.tall { height: 300px; }
+    </style>
 </head>
 <body>
 
@@ -26,13 +137,38 @@
     </div>
 </nav>
 
-<div id="dashboardContent" class="page-wrapper">
+<div class="page-wrapper">
     <div class="container">
 
-        <div style="margin-bottom: 36px;">
+        <div style="margin-bottom: 28px;">
             <div class="section-label">الإحصائيات والأداء</div>
             <h1 class="page-title">لوحة التحكم</h1>
             <p style="color: var(--text-light); font-size: 0.95rem;">نظرة عامة على أداء نظام التحقق وجودة البيانات المجمعة</p>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert-banner" id="alertBanner">
+            <span class="alert-icon">⚠️</span>
+            <span id="alertText">نسبة الاستجابات منخفضة الجودة مرتفعة بشكل غير طبيعي — يُنصح بمراجعة البيانات.</span>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <span class="filter-label">🔍 تصفية:</span>
+            <select class="filter-select" id="filterDays">
+                <option value="0">كل الفترات</option>
+                <option value="7">آخر 7 أيام</option>
+                <option value="30">آخر 30 يومًا</option>
+                <option value="60">آخر 60 يومًا</option>
+            </select>
+            <select class="filter-select" id="filterQuality">
+                <option value="">جميع مستويات الجودة</option>
+                <option value="High">عالية فقط</option>
+                <option value="Medium">متوسطة فقط</option>
+                <option value="Low">منخفضة فقط</option>
+            </select>
+            <button class="filter-btn" onclick="applyFilters()">تطبيق</button>
+            <button class="filter-reset" onclick="resetFilters()">إعادة تعيين</button>
         </div>
 
         <!-- Summary Cards -->
@@ -50,12 +186,12 @@
                     <div class="stat-sublabel">متوسط نقاط الثقة</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">عدد الاستجابات عالية الجودة</div>
+                    <div class="stat-label">استجابات عالية الجودة</div>
                     <div class="stat-value success" id="statHighQuality">—</div>
                     <div class="stat-sublabel">نقاط ثقة ≥ 90</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">عدد الاستجابات منخفضة الجودة</div>
+                    <div class="stat-label">استجابات منخفضة الجودة</div>
                     <div class="stat-value danger" id="statLowQuality">—</div>
                     <div class="stat-sublabel">نقاط ثقة أقل من 70</div>
                 </div>
@@ -96,7 +232,6 @@
         <!-- Data Quality Section -->
         <div class="dashboard-section">
             <div class="section-title">جودة البيانات</div>
-
             <div class="stats-grid" style="margin-bottom: 20px;">
                 <div class="stat-card">
                     <div class="stat-label">استجابات صالحة</div>
@@ -112,8 +247,6 @@
                     <div class="stat-sublabel">نقاط ثقة 70–89</div>
                 </div>
             </div>
-
-            <!-- Quality Distribution -->
             <div>
                 <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-medium); margin-bottom: 12px;">توزيع مستويات الجودة</div>
                 <div class="quality-distribution">
@@ -133,6 +266,37 @@
             </div>
         </div>
 
+        <!-- Charts Section -->
+        <div class="dashboard-section">
+            <div class="section-title">الرسوم البيانية</div>
+
+            <div class="charts-grid">
+                <!-- Donut: Quality Distribution -->
+                <div class="chart-card">
+                    <div class="chart-title">توزيع مستويات الجودة</div>
+                    <div class="chart-container">
+                        <canvas id="chartQualityDonut"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bar: Rules Frequency -->
+                <div class="chart-card">
+                    <div class="chart-title">أكثر القواعد تفعيلاً</div>
+                    <div class="chart-container">
+                        <canvas id="chartRulesBar"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Line: Quality Timeline -->
+            <div class="chart-card">
+                <div class="chart-title">متوسط Confidence Score عبر الزمن</div>
+                <div class="chart-container tall">
+                    <canvas id="chartTimeline"></canvas>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -144,39 +308,183 @@
     </div>
 </footer>
 
-<script src="/static/js/app.js"></script>
 <script>
-    // Extra: sync quality distribution bars with the stats
-    document.addEventListener("DOMContentLoaded", function () {
-        var origRender = window.renderDashboard;
-        // Extend renderDashboard to also fill distribution bars
-        fetch("/api/dashboard-stats")
-            .then(function (r) { return r.json(); })
-            .then(function (stats) {
-                var setT = function (id, val) {
-                    var el = document.getElementById(id);
-                    if (el) el.textContent = val;
-                };
-                setT("statTotalResponses", stats.total_responses || 0);
-                setT("statAvgScore", (stats.avg_confidence_score || 0) + "%");
-                setT("statHighQuality", stats.high_quality_count || 0);
-                setT("statMediumQuality", stats.medium_quality_count || 0);
-                setT("statLowQuality", stats.low_quality_count || 0);
-                setT("statFlagged", stats.flagged_count || 0);
-                setT("statValid", stats.valid_count || 0);
-                setT("statPrecision", (stats.precision || 0) + "%");
-                setT("statRecall", (stats.recall || 0) + "%");
-                setT("statCorrectionRate", (stats.correction_rate || 0) + "%");
-                setT("statCompletionRate", (stats.completion_rate || 0) + "%");
-                setT("statTimeSaved", stats.time_saved || "0%");
-                setT("statOverallQuality", stats.overall_data_quality || "—");
-                // Distribution bars
-                setT("distHighQuality", stats.high_quality_count || 0);
-                setT("distMediumQuality", stats.medium_quality_count || 0);
-                setT("distLowQuality", stats.low_quality_count || 0);
-            })
-            .catch(function (err) { console.error("Dashboard error:", err); });
-    });
+    Chart.defaults.font.family = "'Cairo', sans-serif";
+    Chart.defaults.color = "#B0B0D0";
+
+    let chartDonut = null, chartBar = null, chartLine = null;
+
+    function getFilters() {
+        return {
+            days: document.getElementById("filterDays").value || "0",
+            quality: document.getElementById("filterQuality").value || "",
+        };
+    }
+
+    function applyFilters() { loadAll(); }
+    function resetFilters() {
+        document.getElementById("filterDays").value = "0";
+        document.getElementById("filterQuality").value = "";
+        loadAll();
+    }
+
+    function setT(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val;
+    }
+
+    async function loadStats(days, quality) {
+        const params = new URLSearchParams({ days, quality });
+        const res = await fetch("/api/dashboard-stats?" + params);
+        const stats = await res.json();
+
+        setT("statTotalResponses", stats.total_responses || 0);
+        setT("statAvgScore", (stats.avg_confidence_score || 0) + "%");
+        setT("statHighQuality", stats.high_quality_count || 0);
+        setT("statMediumQuality", stats.medium_quality_count || 0);
+        setT("statLowQuality", stats.low_quality_count || 0);
+        setT("statFlagged", stats.flagged_count || 0);
+        setT("statValid", stats.valid_count || 0);
+        setT("statPrecision", (stats.precision || 0) + "%");
+        setT("statRecall", (stats.recall || 0) + "%");
+        setT("statCorrectionRate", (stats.correction_rate || 0) + "%");
+        setT("statCompletionRate", (stats.completion_rate || 0) + "%");
+        setT("statTimeSaved", stats.time_saved || "0%");
+        setT("statOverallQuality", stats.overall_data_quality || "—");
+        setT("distHighQuality", stats.high_quality_count || 0);
+        setT("distMediumQuality", stats.medium_quality_count || 0);
+        setT("distLowQuality", stats.low_quality_count || 0);
+
+        // Alert: if low quality > 30%
+        const alert = document.getElementById("alertBanner");
+        const alertText = document.getElementById("alertText");
+        if (stats.low_quality_pct >= 30) {
+            alertText.textContent = `تحذير: ${stats.low_quality_pct}% من الاستجابات ذات جودة منخفضة — يُنصح بمراجعة البيانات.`;
+            alert.classList.add("show");
+        } else {
+            alert.classList.remove("show");
+        }
+
+        return stats;
+    }
+
+    async function loadRulesChart(days) {
+        const params = new URLSearchParams({ days });
+        const res = await fetch("/api/rules-frequency?" + params);
+        const data = await res.json();
+
+        const labels = data.map(d => d.rule);
+        const counts = data.map(d => d.count);
+        const colors = data.map(d =>
+            d.severity === "High" ? "rgba(239,68,68,0.8)" :
+            d.severity === "Medium" ? "rgba(245,158,11,0.8)" :
+            "rgba(124,58,237,0.8)"
+        );
+
+        if (chartBar) chartBar.destroy();
+        const ctx = document.getElementById("chartRulesBar").getContext("2d");
+        chartBar = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels,
+                datasets: [{
+                    label: "عدد مرات التفعيل",
+                    data: counts,
+                    backgroundColor: colors,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#B0B0D0" } },
+                    y: { grid: { display: false }, ticks: { color: "#B0B0D0", font: { size: 11 } } }
+                }
+            }
+        });
+    }
+
+    async function loadTimelineChart(days) {
+        const useDays = days == "0" ? 60 : days;
+        const params = new URLSearchParams({ days: useDays });
+        const res = await fetch("/api/quality-timeline?" + params);
+        const data = await res.json();
+
+        const labels = data.map(d => d.day);
+        const avgScores = data.map(d => d.avg_score);
+
+        if (chartLine) chartLine.destroy();
+        const ctx = document.getElementById("chartTimeline").getContext("2d");
+        chartLine = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels,
+                datasets: [{
+                    label: "متوسط Confidence Score",
+                    data: avgScores,
+                    borderColor: "#7C3AED",
+                    backgroundColor: "rgba(124,58,237,0.1)",
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: "#9F7AEA",
+                    fill: true,
+                    tension: 0.4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: "#B0B0D0" } } },
+                scales: {
+                    x: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#B0B0D0", maxTicksLimit: 10 } },
+                    y: {
+                        min: 0, max: 100,
+                        grid: { color: "rgba(255,255,255,0.05)" },
+                        ticks: { color: "#B0B0D0", callback: v => v + "%" }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderDonut(stats) {
+        if (chartDonut) chartDonut.destroy();
+        const ctx = document.getElementById("chartQualityDonut").getContext("2d");
+        chartDonut = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                labels: ["عالية", "متوسطة", "منخفضة"],
+                datasets: [{
+                    data: [stats.high_quality_count, stats.medium_quality_count, stats.low_quality_count],
+                    backgroundColor: ["rgba(16,185,129,0.8)", "rgba(245,158,11,0.8)", "rgba(239,68,68,0.8)"],
+                    borderColor: ["#10B981", "#F59E0B", "#EF4444"],
+                    borderWidth: 2,
+                    hoverOffset: 8,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "65%",
+                plugins: {
+                    legend: { position: "bottom", labels: { color: "#B0B0D0", padding: 16, font: { size: 13 } } }
+                }
+            }
+        });
+    }
+
+    async function loadAll() {
+        const { days, quality } = getFilters();
+        const stats = await loadStats(days, quality);
+        renderDonut(stats);
+        await loadRulesChart(days);
+        await loadTimelineChart(days);
+    }
+
+    document.addEventListener("DOMContentLoaded", loadAll);
 </script>
 
 </body>

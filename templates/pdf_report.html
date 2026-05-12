@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تقرير جودة البيانات — TrustLayer AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #EEF2FF;
+            --success: #059669;
+            --success-light: #ECFDF5;
+            --warning: #D97706;
+            --warning-light: #FFFBEB;
+            --danger: #DC2626;
+            --danger-light: #FEF2F2;
+            --text: #1E1B4B;
+            --text-medium: #4B5563;
+            --text-light: #9CA3AF;
+            --border: #E5E7EB;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            direction: rtl;
+        }
+
+        /* ── Print action bar (hidden when printing) ── */
+        .print-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 32px;
+            gap: 12px;
+        }
+        .print-bar-title { font-size: 1rem; font-weight: 700; }
+        .print-bar-actions { display: flex; gap: 10px; }
+        .btn-print {
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 8px 22px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-print:hover { opacity: 0.85; }
+        .btn-close {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            padding: 8px 18px;
+            cursor: pointer;
+        }
+
+        /* ── Report wrapper ── */
+        .report {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        /* ── Header ── */
+        .report-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+            color: white;
+            border-radius: var(--radius);
+            padding: 36px 40px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .report-header-left h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; }
+        .report-header-left p  { font-size: 0.9rem; opacity: 0.85; }
+        .report-header-right { text-align: left; }
+        .report-date { font-size: 0.85rem; opacity: 0.8; margin-bottom: 4px; }
+        .report-badge {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        /* ── Section ── */
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .icon { font-size: 1.1rem; }
+
+        /* ── KPI grid ── */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        @media (max-width: 700px) { .kpi-grid { grid-template-columns: repeat(2,1fr); } }
+        .kpi-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 14px;
+            text-align: center;
+        }
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .kpi-label { font-size: 0.78rem; color: var(--text-medium); font-weight: 500; }
+        .kpi-primary  .kpi-value { color: var(--primary); }
+        .kpi-success  .kpi-value { color: var(--success); }
+        .kpi-warning  .kpi-value { color: var(--warning); }
+        .kpi-danger   .kpi-value { color: var(--danger); }
+
+        /* ── Cleaning table ── */
+        .clean-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .clean-table th {
+            background: #F1F5F9;
+            color: var(--text-medium);
+            font-weight: 600;
+            padding: 10px 14px;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+        .clean-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        .clean-table tr:last-child td { border-bottom: none; font-weight: 700; }
+        .badge {
+            display: inline-block;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .badge-green  { background: var(--success-light); color: var(--success); }
+        .badge-red    { background: var(--danger-light);  color: var(--danger); }
+        .badge-yellow { background: var(--warning-light); color: var(--warning); }
+        .badge-blue   { background: var(--primary-light); color: var(--primary); }
+
+        /* ── Charts ── */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        @media (max-width: 600px) { .charts-grid { grid-template-columns: 1fr; } }
+        .chart-wrap { height: 240px; position: relative; }
+        .chart-wrap.tall { height: 280px; }
+
+        /* ── Issues list ── */
+        .issue-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .issue-row:last-child { border-bottom: none; }
+        .issue-sev {
+            flex-shrink: 0;
+            width: 80px;
+            text-align: center;
+        }
+        .issue-body { flex: 1; }
+        .issue-rule { font-weight: 700; font-size: 0.88rem; color: var(--text); margin-bottom: 2px; }
+        .issue-count { font-size: 0.82rem; color: var(--text-medium); }
+
+        /* ── Insights ── */
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-right: 4px solid var(--primary);
+        }
+        .insight-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .insight-text { font-size: 0.9rem; line-height: 1.6; color: var(--text-medium); }
+
+        /* ── Footer ── */
+        .report-footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Loading overlay ── */
+        #loadingOverlay {
+            position: fixed; inset: 0;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 9999;
+            font-family: 'Cairo', sans-serif;
+        }
+        .spinner-pdf {
+            width: 40px; height: 40px;
+            border: 4px solid #E5E7EB;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Print styles ── */
+        @media print {
+            .print-bar { display: none !important; }
+            #loadingOverlay { display: none !important; }
+            body { background: white; }
+            .report { padding: 20px 16px; max-width: 100%; }
+            .section { break-inside: avoid; box-shadow: none; }
+            .report-header { break-after: avoid; }
+            .charts-grid { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div id="loadingOverlay">
+    <div class="spinner-pdf"></div>
+    <p style="color:#6B7280;font-size:0.95rem;">جارٍ تحميل التقرير...</p>
+</div>
+
+<!-- Action bar -->
+<div class="print-bar">
+    <span class="print-bar-title">📄 تقرير جودة البيانات — TrustLayer AI</span>
+    <div class="print-bar-actions">
+        <button class="btn-print" onclick="window.print()">🖨️ طباعة / حفظ كـ PDF</button>
+        <button class="btn-close" onclick="window.close()">✕ إغلاق</button>
+    </div>
+</div>
+
+<div class="report">
+
+    <!-- Header -->
+    <div class="report-header">
+        <div class="report-header-left">
+            <h1>تقرير جودة بيانات الاستبيان</h1>
+            <p>نظام TrustLayer AI — تحليل شامل لجودة الاستجابات بعد عملية التنظيف</p>
+        </div>
+        <div class="report-header-right">
+            <div class="report-date" id="reportDate">—</div>
+            <div class="report-badge">تقرير تلقائي</div>
+        </div>
+    </div>
+
+    <!-- 1. Survey Statistics -->
+    <div class="section">
+        <div class="section-title"><span class="icon">📊</span> إحصائيات الاستبيان</div>
+        <div class="kpi-grid">
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-value" id="kpiTotal">—</div>
+                <div class="kpi-label">إجمالي الاستجابات</div>
+            </div>
+            <div class="kpi-card kpi-success">
+                <div class="kpi-value" id="kpiAvg">—</div>
+                <div class="kpi-label">متوسط درجة الثقة</div>
+            </div>
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-value" id="kpiPrecision">—</div>
+                <div class="kpi-label">Precision</div>
+            </div>
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-value" id="kpiRecall">—</div>
+                <div class="kpi-label">Recall</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Data Cleaning Summary -->
+    <div class="section">
+        <div class="section-title"><span class="icon">🧹</span> ملخص تنظيف البيانات</div>
+        <table class="clean-table">
+            <thead>
+                <tr>
+                    <th>البند</th>
+                    <th>العدد</th>
+                    <th>النسبة</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody id="cleaningTableBody">
+                <tr><td colspan="4" style="text-align:center;color:#9CA3AF;">جارٍ التحميل...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 3. Quality Distribution -->
+    <div class="section">
+        <div class="section-title"><span class="icon">📈</span> توزيع مستويات الجودة</div>
+        <div class="kpi-grid" style="margin-bottom:20px;">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-value" id="kpiHigh">—</div>
+                <div class="kpi-label">عالية الجودة (≥90)</div>
+            </div>
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-value" id="kpiMedium">—</div>
+                <div class="kpi-label">متوسطة (70–89)</div>
+            </div>
+            <div class="kpi-card kpi-danger">
+                <div class="kpi-value" id="kpiLow">—</div>
+                <div class="kpi-label">منخفضة (&lt;70)</div>
+            </div>
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-value" id="kpiCorrection">—</div>
+                <div class="kpi-label">معدل التصحيح</div>
+            </div>
+        </div>
+        <div class="charts-grid">
+            <div>
+                <p style="font-size:0.82rem;font-weight:600;color:var(--text-medium);margin-bottom:10px;">توزيع الجودة (Pie)</p>
+                <div class="chart-wrap"><canvas id="pdfPieChart"></canvas></div>
+            </div>
+            <div>
+                <p style="font-size:0.82rem;font-weight:600;color:var(--text-medium);margin-bottom:10px;">قبل وبعد التنظيف</p>
+                <div class="chart-wrap"><canvas id="pdfBarChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Detected Issues -->
+    <div class="section">
+        <div class="section-title"><span class="icon">⚠️</span> المشكلات المكتشفة (أكثر القواعد تفعيلاً)</div>
+        <div id="issuesContainer">
+            <p style="color:#9CA3AF;font-size:0.9rem;">جارٍ التحميل...</p>
+        </div>
+    </div>
+
+    <!-- 5. Insights & Recommendations -->
+    <div class="section">
+        <div class="section-title"><span class="icon">💡</span> الملاحظات والتوصيات</div>
+        <div id="insightsContainer">
+            <p style="color:#9CA3AF;font-size:0.9rem;">جارٍ التحميل...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="report-footer">
+        تم إنشاء هذا التقرير تلقائياً بواسطة TrustLayer AI &nbsp;•&nbsp;
+        نظام التحقق من جودة بيانات الاستبيانات في الوقت الفعلي
+        <br>
+        جامعة الأميرة نورة بنت عبدالرحمن — مقرر SW 413
+    </div>
+
+</div>
+
+<script>
+Chart.defaults.font.family = "'Cairo', sans-serif";
+
+async function loadReport() {
+    try {
+        const [statsRes, cleanRes, rulesRes] = await Promise.all([
+            fetch("/api/dashboard-stats"),
+            fetch("/api/cleaning-stats"),
+            fetch("/api/rules-frequency"),
+        ]);
+
+        const stats = await statsRes.json();
+        const clean = await cleanRes.json();
+        const rules = await rulesRes.json();
+
+        // Date
+        document.getElementById("reportDate").textContent =
+            "تاريخ التقرير: " + new Date().toLocaleDateString("ar-SA", {
+                year: "numeric", month: "long", day: "numeric"
+            });
+
+        // ── KPIs ──────────────────────────────────────────────
+        document.getElementById("kpiTotal").textContent     = stats.total_responses ?? "—";
+        document.getElementById("kpiAvg").textContent       = (stats.avg_confidence_score ?? 0) + "%";
+        document.getElementById("kpiPrecision").textContent = (stats.precision ?? 0) + "%";
+        document.getElementById("kpiRecall").textContent    = (stats.recall ?? 0) + "%";
+        document.getElementById("kpiHigh").textContent      = stats.high_quality_count ?? 0;
+        document.getElementById("kpiMedium").textContent    = stats.medium_quality_count ?? 0;
+        document.getElementById("kpiLow").textContent       = stats.low_quality_count ?? 0;
+        document.getElementById("kpiCorrection").textContent = (stats.correction_rate ?? 0) + "%";
+
+        // ── Cleaning table ─────────────────────────────────────
+        const orig = clean.original_count || 0;
+        const pct = (v) => orig > 0 ? ((v / orig) * 100).toFixed(1) + "%" : "0%";
+        document.getElementById("cleaningTableBody").innerHTML = `
+            <tr>
+                <td>إجمالي الاستجابات الأصلية</td>
+                <td><strong>${clean.original_count}</strong></td>
+                <td>100%</td>
+                <td><span class="badge badge-blue">أصلي</span></td>
+            </tr>
+            <tr>
+                <td>استجابات مكررة تمت إزالتها</td>
+                <td>${clean.removed_duplicates}</td>
+                <td>${pct(clean.removed_duplicates)}</td>
+                <td><span class="badge badge-yellow">مُزال</span></td>
+            </tr>
+            <tr>
+                <td>استجابات مشبوهة / منخفضة جداً</td>
+                <td>${clean.removed_suspicious}</td>
+                <td>${pct(clean.removed_suspicious)}</td>
+                <td><span class="badge badge-red">مُزال</span></td>
+            </tr>
+            <tr>
+                <td>الاستجابات النظيفة النهائية</td>
+                <td><strong>${clean.final_clean}</strong></td>
+                <td><strong>${pct(clean.final_clean)}</strong></td>
+                <td><span class="badge badge-green">نظيف ✓</span></td>
+            </tr>
+        `;
+
+        // ── Pie chart ─────────────────────────────────────────
+        new Chart(document.getElementById("pdfPieChart"), {
+            type: "doughnut",
+            data: {
+                labels: ["عالية", "متوسطة", "منخفضة"],
+                datasets: [{
+                    data: [stats.high_quality_count, stats.medium_quality_count, stats.low_quality_count],
+                    backgroundColor: ["#10B981", "#F59E0B", "#EF4444"],
+                    borderWidth: 2,
+                    hoverOffset: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: "60%",
+                plugins: {
+                    legend: { position: "bottom", labels: { font: { size: 11 }, color: "#374151" } }
+                }
+            }
+        });
+
+        // ── Before/After bar chart ────────────────────────────
+        new Chart(document.getElementById("pdfBarChart"), {
+            type: "bar",
+            data: {
+                labels: ["عالية", "متوسطة", "منخفضة"],
+                datasets: [
+                    {
+                        label: "قبل التنظيف",
+                        data: [clean.high_before, clean.medium_before, clean.low_before],
+                        backgroundColor: ["rgba(16,185,129,0.35)","rgba(245,158,11,0.35)","rgba(239,68,68,0.35)"],
+                        borderColor: ["#10B981","#F59E0B","#EF4444"],
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    },
+                    {
+                        label: "بعد التنظيف",
+                        data: [clean.high_after, clean.medium_after, clean.low_after],
+                        backgroundColor: ["#10B981","#F59E0B","#EF4444"],
+                        borderRadius: 5,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { font: { size: 11 }, color: "#374151" } } },
+                scales: {
+                    x: { ticks: { color: "#6B7280" }, grid: { display: false } },
+                    y: { ticks: { color: "#6B7280" }, grid: { color: "#F3F4F6" }, beginAtZero: true }
+                }
+            }
+        });
+
+        // ── Issues list ───────────────────────────────────────
+        const sevLabel = { High: "عالية", Medium: "متوسطة", Low: "منخفضة" };
+        const sevBadge = { High: "badge-red", Medium: "badge-yellow", Low: "badge-blue" };
+        const issuesHtml = rules.slice(0, 7).map(r => `
+            <div class="issue-row">
+                <div class="issue-sev">
+                    <span class="badge ${sevBadge[r.severity] || 'badge-blue'}">
+                        ${sevLabel[r.severity] || r.severity}
+                    </span>
+                </div>
+                <div class="issue-body">
+                    <div class="issue-rule">${r.rule}</div>
+                    <div class="issue-count">تكرر ${r.count} مرة</div>
+                </div>
+                <div style="font-size:1.1rem;font-weight:700;color:#374151;">${r.count}</div>
+            </div>
+        `).join("");
+        document.getElementById("issuesContainer").innerHTML =
+            issuesHtml || '<p style="color:#9CA3AF;">لا توجد مشكلات مسجلة.</p>';
+
+        // ── Insights ──────────────────────────────────────────
+        const lowPct = stats.low_quality_pct || 0;
+        const avgScore = stats.avg_confidence_score || 0;
+        const corrRate = stats.correction_rate || 0;
+        const cleanPct = orig > 0 ? ((clean.final_clean / orig) * 100).toFixed(1) : 0;
+
+        const insights = [];
+
+        if (avgScore >= 80) {
+            insights.push({ icon: "✅", text: `متوسط درجة الثقة ${avgScore}% — مستوى جيد يعكس جودة بيانات مقبولة بشكل عام.` });
+        } else if (avgScore >= 65) {
+            insights.push({ icon: "⚠️", text: `متوسط درجة الثقة ${avgScore}% — يُنصح بمراجعة القواعد الأكثر تفعيلاً لتحسين جودة البيانات.` });
+        } else {
+            insights.push({ icon: "🔴", text: `متوسط درجة الثقة ${avgScore}% منخفض — يجب مراجعة تصميم الاستبيان والقيود المنطقية.` });
+        }
+
+        if (lowPct >= 30) {
+            insights.push({ icon: "🚨", text: `${lowPct}% من الاستجابات ذات جودة منخفضة — نسبة مرتفعة تستوجب مراجعة عاجلة لمصدر البيانات.` });
+        } else {
+            insights.push({ icon: "📊", text: `نسبة الاستجابات المنخفضة ${lowPct}% — ضمن الحدود المقبولة.` });
+        }
+
+        if (corrRate > 0) {
+            insights.push({ icon: "🔧", text: `معدل التصحيح ${corrRate}% — آلية المراجعة فعّالة وتُسهم في تحسين جودة البيانات قبل الحفظ.` });
+        }
+
+        insights.push({ icon: "🧹", text: `عملية التنظيف أبقت على ${cleanPct}% من البيانات الأصلية (${clean.final_clean} من ${orig} استجابة).` });
+
+        if (rules.length > 0) {
+            insights.push({ icon: "📌", text: `أكثر المشكلات تكراراً: "${rules[0].rule}" — يُنصح بمراجعة هذا الشرط في تصميم الاستبيان.` });
+        }
+
+        document.getElementById("insightsContainer").innerHTML = insights.map(i => `
+            <div class="insight-item">
+                <span class="insight-icon">${i.icon}</span>
+                <span class="insight-text">${i.text}</span>
+            </div>
+        `).join("");
+
+        // Hide loading overlay
+        document.getElementById("loadingOverlay").style.display = "none";
+
+    } catch (err) {
+        document.getElementById("loadingOverlay").innerHTML =
+            '<p style="color:#DC2626;font-family:Cairo,sans-serif;">فشل تحميل بيانات التقرير. تأكد من تشغيل الخادم.</p>';
+        console.error(err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadReport);
+</script>
+</body>
+</html>

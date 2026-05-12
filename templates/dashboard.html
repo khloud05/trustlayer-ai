@@ -118,6 +118,64 @@
         }
         .chart-container { position: relative; height: 240px; }
         .chart-container.tall { height: 300px; }
+
+        /* ── Export PDF Button ── */
+        .export-btn {
+            margin-right: auto;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: opacity 0.2s;
+            text-decoration: none;
+        }
+        .export-btn:hover { opacity: 0.85; }
+
+        /* ── Cleaning Summary ── */
+        .cleaning-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        @media (max-width: 900px) { .cleaning-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .cleaning-grid { grid-template-columns: 1fr; } }
+
+        .cleaning-card {
+            background: var(--card-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .cleaning-card .c-icon { font-size: 1.4rem; }
+        .cleaning-card .c-value {
+            font-size: 1.9rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .cleaning-card .c-label {
+            font-size: 0.82rem;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+        .cleaning-card.original  { border-color: rgba(124,58,237,0.3); }
+        .cleaning-card.original  .c-value { color: #A78BFA; }
+        .cleaning-card.duplicates { border-color: rgba(245,158,11,0.3); }
+        .cleaning-card.duplicates .c-value { color: var(--warning); }
+        .cleaning-card.suspicious { border-color: rgba(239,68,68,0.3); }
+        .cleaning-card.suspicious .c-value { color: var(--danger); }
+        .cleaning-card.clean      { border-color: rgba(16,185,129,0.3); }
+        .cleaning-card.clean      .c-value { color: var(--success); }
     </style>
 </head>
 <body>
@@ -169,6 +227,39 @@
             </select>
             <button class="filter-btn" onclick="applyFilters()">تطبيق</button>
             <button class="filter-reset" onclick="resetFilters()">إعادة تعيين</button>
+            <a href="/pdf-report" target="_blank" class="export-btn">
+                <span>📄</span> تصدير PDF
+            </a>
+        </div>
+
+        <!-- Data Cleaning Summary -->
+        <div class="dashboard-section">
+            <div class="section-title">ملخص تنظيف البيانات</div>
+            <p style="color:var(--text-light);font-size:0.88rem;margin-bottom:16px;">
+                إزالة المكررات والاستجابات المشبوهة قبل التحليل النهائي
+            </p>
+            <div class="cleaning-grid">
+                <div class="cleaning-card original">
+                    <span class="c-icon">📊</span>
+                    <span class="c-value" id="cleanOriginal">—</span>
+                    <span class="c-label">إجمالي الاستجابات الأصلية</span>
+                </div>
+                <div class="cleaning-card duplicates">
+                    <span class="c-icon">🗂️</span>
+                    <span class="c-value" id="cleanDuplicates">—</span>
+                    <span class="c-label">مكررة تمت إزالتها</span>
+                </div>
+                <div class="cleaning-card suspicious">
+                    <span class="c-icon">⚠️</span>
+                    <span class="c-value" id="cleanSuspicious">—</span>
+                    <span class="c-label">مشبوهة / منخفضة جداً</span>
+                </div>
+                <div class="cleaning-card clean">
+                    <span class="c-icon">✅</span>
+                    <span class="c-value" id="cleanFinal">—</span>
+                    <span class="c-label">الاستجابات النظيفة النهائية</span>
+                </div>
+            </div>
         </div>
 
         <!-- Summary Cards -->
@@ -288,8 +379,16 @@
                 </div>
             </div>
 
+            <!-- Bar: Before vs After Cleaning -->
+            <div class="chart-card" style="grid-column: span 2;">
+                <div class="chart-title">مقارنة جودة البيانات — قبل وبعد التنظيف</div>
+                <div class="chart-container" style="height:200px;">
+                    <canvas id="chartCleaning"></canvas>
+                </div>
+            </div>
+
             <!-- Line: Quality Timeline -->
-            <div class="chart-card">
+            <div class="chart-card" style="grid-column: span 2;">
                 <div class="chart-title">متوسط Confidence Score عبر الزمن</div>
                 <div class="chart-container tall">
                     <canvas id="chartTimeline"></canvas>
@@ -312,7 +411,7 @@
     Chart.defaults.font.family = "'Cairo', sans-serif";
     Chart.defaults.color = "#B0B0D0";
 
-    let chartDonut = null, chartBar = null, chartLine = null;
+    let chartDonut = null, chartBar = null, chartLine = null, chartCleaning = null;
 
     function getFilters() {
         return {
@@ -476,12 +575,69 @@
         });
     }
 
+    async function loadCleaningStats() {
+        const res = await fetch("/api/cleaning-stats");
+        const data = await res.json();
+
+        setT("cleanOriginal",   data.original_count   ?? "—");
+        setT("cleanDuplicates", data.removed_duplicates ?? "—");
+        setT("cleanSuspicious", data.removed_suspicious ?? "—");
+        setT("cleanFinal",      data.final_clean        ?? "—");
+
+        renderCleaningChart(data);
+    }
+
+    function renderCleaningChart(data) {
+        if (chartCleaning) chartCleaning.destroy();
+        const ctx = document.getElementById("chartCleaning").getContext("2d");
+        chartCleaning = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["عالية الجودة", "متوسطة الجودة", "منخفضة الجودة"],
+                datasets: [
+                    {
+                        label: "قبل التنظيف",
+                        data: [data.high_before, data.medium_before, data.low_before],
+                        backgroundColor: ["rgba(16,185,129,0.5)", "rgba(245,158,11,0.5)", "rgba(239,68,68,0.5)"],
+                        borderColor: ["#10B981", "#F59E0B", "#EF4444"],
+                        borderWidth: 2,
+                        borderRadius: 6,
+                    },
+                    {
+                        label: "بعد التنظيف",
+                        data: [data.high_after, data.medium_after, data.low_after],
+                        backgroundColor: ["rgba(16,185,129,0.85)", "rgba(245,158,11,0.85)", "rgba(239,68,68,0.85)"],
+                        borderColor: ["#10B981", "#F59E0B", "#EF4444"],
+                        borderWidth: 2,
+                        borderRadius: 6,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: "#B0B0D0", font: { size: 12 } } }
+                },
+                scales: {
+                    x: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "#B0B0D0" } },
+                    y: {
+                        grid: { color: "rgba(255,255,255,0.05)" },
+                        ticks: { color: "#B0B0D0" },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
     async function loadAll() {
         const { days, quality } = getFilters();
         const stats = await loadStats(days, quality);
         renderDonut(stats);
         await loadRulesChart(days);
         await loadTimelineChart(days);
+        await loadCleaningStats();
     }
 
     document.addEventListener("DOMContentLoaded", loadAll);

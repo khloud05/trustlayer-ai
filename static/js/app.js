@@ -182,6 +182,13 @@ async function handleReviewClick() {
     });
 
     var responseTimeSec = Math.max(1, Math.round((Date.now() - surveyStartTime) / 1000));
+
+    // Block impossibly fast submissions (< 8 seconds for 11 questions)
+    if (responseTimeSec < 8) {
+        showSurveyError("الاستجابة سريعة جداً — يرجى قراءة كل سؤال بعناية قبل الإجابة.");
+        return;
+    }
+
     var responseId = "RESP-" + Date.now();
 
     // Check if we already had a previous originalAnswers; if not, this is the first validation
@@ -232,6 +239,43 @@ async function handleReviewClick() {
 // -----------------------------------------------------------------------
 // Review Page
 // -----------------------------------------------------------------------
+
+/**
+ * Determines whether submission should be blocked.
+ * Returns { blocked: bool, reasons: string[], details: string[] }
+ */
+function evaluateBlockStatus(validationResult, responseTimeSec) {
+    var score = validationResult.confidence_score;
+    var issues = validationResult.issues || [];
+    var reasons = [];
+    var details = [];
+
+    // Block 1: Score ≤ 30 — multiple serious violations
+    if (score <= 30) {
+        reasons.push("درجة الجودة منخفضة جداً (" + score + "/100)");
+        details.push("تم رصد " + issues.length + " مشكلة خطيرة في إجاباتك.");
+        details.push("يرجى تصحيح التناقضات الأساسية قبل الإرسال.");
+    }
+
+    // Block 2: Impossibly fast response time
+    if (responseTimeSec && responseTimeSec < 8) {
+        reasons.push("سرعة إجابة مشبوهة (" + responseTimeSec + " ثانية)");
+        details.push("لا يمكن قراءة الأسئلة والإجابة عليها في هذا الوقت.");
+        details.push("يرجى العودة وإعادة ملء الاستبيان بعناية.");
+    }
+
+    // Block 3: High-severity issues dominate (3+ High issues)
+    var highCount = issues.filter(function(i) { return i.severity === "High"; }).length;
+    if (highCount >= 2) {
+        if (reasons.length === 0) {
+            reasons.push("تعارضات منطقية خطيرة (" + highCount + " مشكلة عالية الخطورة)");
+            details.push("الإجابات تحتوي على تناقضات غير قابلة للتجاهل.");
+        }
+    }
+
+    return { blocked: reasons.length > 0, reasons: reasons, details: details };
+}
+
 function initReviewPage() {
     if (!document.getElementById("reviewContent")) return;
 
@@ -250,7 +294,13 @@ function initReviewPage() {
         return;
     }
 
-    renderReview(validationResult);
+    var responseTimeSec = 0;
+    try {
+        var rt = sessionStorage.getItem("responseTimeSeconds");
+        if (rt) responseTimeSec = parseInt(rt, 10);
+    } catch (e) {}
+
+    renderReview(validationResult, responseTimeSec);
 
     // Button: Edit answers
     var editBtn = document.getElementById("editBtn");
@@ -273,10 +323,11 @@ function initReviewPage() {
     }
 }
 
-function renderReview(validationResult) {
+function renderReview(validationResult, responseTimeSec) {
     var score = validationResult.confidence_score;
     var quality = validationResult.quality_level;
     var issues = validationResult.issues || [];
+    responseTimeSec = responseTimeSec || 0;
 
     // Score circle
     var scoreEl = document.getElementById("scoreNumber");
@@ -303,6 +354,35 @@ function renderReview(validationResult) {
             "Low": "تم اكتشاف تناقضات متعددة. يرجى مراجعة الإجابات."
         };
         scoreDesc.textContent = descMap[quality] || "";
+    }
+
+    // ── Block check ──────────────────────────────────────────
+    var blockStatus = evaluateBlockStatus(validationResult, responseTimeSec);
+    var blockedBanner = document.getElementById("blockedBanner");
+    var confirmBtn = document.getElementById("confirmBtn");
+
+    if (blockStatus.blocked) {
+        if (blockedBanner) {
+            var reasonEl = document.getElementById("blockedReason");
+            var detailsEl = document.getElementById("blockedDetails");
+            if (reasonEl) reasonEl.textContent = blockStatus.reasons.join(" | ");
+            if (detailsEl) {
+                detailsEl.innerHTML = blockStatus.details.map(function(d) {
+                    return "<li>" + escapeHtml(d) + "</li>";
+                }).join("");
+            }
+            blockedBanner.style.display = "flex";
+        }
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = "🚫 الإرسال محظور";
+        }
+    } else {
+        if (blockedBanner) blockedBanner.style.display = "none";
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = "تأكيد الإرسال ✓";
+        }
     }
 
     // Issues list
@@ -402,8 +482,11 @@ async function handleRevalidate() {
         var validationResult = await response.json();
         sessionStorage.setItem("validationResult", JSON.stringify(validationResult));
 
+        var rtSec = 0;
+        try { rtSec = parseInt(sessionStorage.getItem("responseTimeSeconds") || "0", 10); } catch(e) {}
+
         hideSpinner();
-        renderReview(validationResult);
+        renderReview(validationResult, rtSec);
 
     } catch (err) {
         hideSpinner();

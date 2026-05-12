@@ -2,902 +2,891 @@
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>نموذج أولي — TrustLayer AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TrustLayer AI — نموذج أولي (PDF)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --primary: #7C3AED;
-  --primary-light: rgba(124,58,237,0.15);
-  --accent: #06B6D4;
-  --bg: #0A0A12;
-  --bg2: #0F0F1C;
-  --card: #13131F;
-  --card2: #1A1A2E;
-  --border: rgba(255,255,255,0.07);
-  --text: #F0F0FF;
-  --muted: #6B6B8A;
-  --success: #10B981;
-  --warning: #F59E0B;
-  --danger: #EF4444;
+:root{
+  --p:#4F46E5; --pd:#3730A3; --pl:#EEF2FF;
+  --bg:#F5F7FB; --white:#FFFFFF; --border:#E5E7EB;
+  --td:#111827; --tm:#374151; --tl:#6B7280;
+  --ok:#10B981; --okl:#ECFDF5;
+  --wa:#F59E0B; --wal:#FFFBEB;
+  --er:#EF4444; --erl:#FEF2F2;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{direction:rtl;}
-body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+body{font-family:'Cairo',sans-serif;background:#E8EAF0;color:var(--td);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
 
-/* ====== PRINT BUTTON ====== */
+/* ── Print button ── */
 .print-btn{
-  position:fixed;bottom:28px;left:28px;z-index:9999;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:white;border:none;border-radius:12px;padding:14px 28px;
-  font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;
-  cursor:pointer;box-shadow:0 8px 28px rgba(124,58,237,0.4);
-  transition:transform .2s,box-shadow .2s;
+  position:fixed;bottom:24px;left:24px;z-index:9999;
+  background:var(--p);color:white;border:none;border-radius:12px;
+  padding:13px 28px;font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:700;
+  cursor:pointer;box-shadow:0 6px 24px rgba(79,70,229,.4);transition:all .2s;
 }
-.print-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(124,58,237,0.5);}
+.print-btn:hover{background:var(--pd);transform:translateY(-2px);}
 
-/* ====== PAGE LAYOUT ====== */
-.proto-page{
-  min-height:100vh;width:100%;max-width:1000px;
-  margin:0 auto;padding:60px 48px;
-  border-bottom:1px solid var(--border);
-  page-break-after:always;
+/* ── Page (A4 portrait) ── */
+.pg{
+  width:210mm;min-height:297mm;background:white;
+  margin:20px auto;padding:20mm 18mm;
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
+  page-break-after:always;position:relative;
 }
-.proto-page:last-of-type{border-bottom:none;}
+.pg:last-of-type{page-break-after:avoid;}
 
-/* ====== COVER PAGE ====== */
+/* ── Cover ── */
 .cover{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;
-  background:radial-gradient(ellipse at 50% 20%, rgba(124,58,237,0.25) 0%, transparent 65%),
-             linear-gradient(180deg,#0F0F20 0%,#0A0A12 100%);
-  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;min-height:297mm;padding:0;
+  background:linear-gradient(160deg,#1E1B4B 0%,var(--pd) 45%,var(--p) 80%,#7C3AED 100%);
+  color:white;
 }
-.cover::before{
-  content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);
-  width:700px;height:700px;
-  background:radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%);
-  pointer-events:none;
+.cover-logo-box{
+  width:80px;height:80px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);
+  border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;font-weight:900;color:white;margin-bottom:32px;letter-spacing:-1px;
 }
-.cover-logo{width:240px;height:auto;margin-bottom:40px;position:relative;}
-.cover-title{
-  font-size:3rem;font-weight:900;margin-bottom:12px;
-  background:linear-gradient(135deg,#FFFFFF,#C4B5FD);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.cover-subtitle{font-size:1.15rem;color:#8B8BAA;margin-bottom:48px;max-width:560px;}
 .cover-badge{
-  display:inline-block;background:rgba(124,58,237,0.2);
-  border:1px solid rgba(124,58,237,0.45);color:#C4B5FD;
-  padding:8px 24px;border-radius:100px;font-size:0.9rem;font-weight:600;
-  margin-bottom:56px;letter-spacing:0.5px;
+  display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  padding:7px 22px;border-radius:100px;font-size:.82rem;font-weight:600;
+  letter-spacing:.8px;text-transform:uppercase;margin-bottom:28px;
 }
-.cover-divider{width:80px;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:2px;margin:0 auto 40px;}
-.cover-team{font-size:1rem;color:#6B6B8A;margin-bottom:8px;}
-.cover-team strong{color:#A78BFA;}
-.cover-date{font-size:0.85rem;color:#4A4A6A;}
+.cover h1{font-size:2.8rem;font-weight:900;line-height:1.2;margin-bottom:14px;letter-spacing:-.5px;}
+.cover-sub{font-size:1.05rem;opacity:.8;max-width:440px;line-height:1.7;margin-bottom:48px;}
+.cover-divider{width:60px;height:3px;background:rgba(255,255,255,.4);border-radius:2px;margin:0 auto 32px;}
+.cover-team{font-size:.9rem;opacity:.65;margin-bottom:6px;}
+.cover-team strong{color:white;opacity:1;}
+.cover-date{font-size:.8rem;opacity:.45;}
+.cover-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:48px;}
+.cover-chip{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  padding:6px 16px;border-radius:8px;font-size:.78rem;font-weight:600;
+}
 
-/* ====== SECTION HEADERS ====== */
-.sec-header{margin-bottom:40px;}
-.sec-chip{
-  display:inline-block;background:rgba(124,58,237,0.15);
-  border:1px solid rgba(124,58,237,0.35);color:#A78BFA;
-  padding:5px 18px;border-radius:100px;font-size:0.78rem;
-  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;
+/* ── Section header ── */
+.pg-head{margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid var(--border);}
+.pg-chip{
+  display:inline-block;background:var(--pl);color:var(--p);
+  padding:4px 14px;border-radius:100px;font-size:.72rem;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;
 }
-.sec-title{font-size:2rem;font-weight:800;margin-bottom:12px;
-  background:linear-gradient(135deg,#F0F0FF,#C4B5FD);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.sec-desc{font-size:1rem;color:#8B8BAA;line-height:1.8;max-width:680px;}
+.pg-title{font-size:1.6rem;font-weight:800;color:var(--td);margin-bottom:6px;}
+.pg-desc{font-size:.88rem;color:var(--tl);line-height:1.7;}
 
-/* ====== INFO CARDS ====== */
-.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:32px;}
-.info-card{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:28px;transition:all .3s;
-}
-.info-card:hover{border-color:rgba(124,58,237,0.4);box-shadow:0 0 24px rgba(124,58,237,0.12);}
-.info-card-icon{font-size:2rem;margin-bottom:16px;}
-.info-card-title{font-size:1.05rem;font-weight:700;margin-bottom:10px;color:var(--text);}
-.info-card-body{font-size:0.9rem;color:#8B8BAA;line-height:1.75;}
+/* ── Info cards grid ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.ic{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px;}
+.ic-icon{font-size:1.5rem;margin-bottom:10px;}
+.ic-title{font-size:.88rem;font-weight:700;color:var(--td);margin-bottom:6px;}
+.ic-body{font-size:.8rem;color:var(--tl);line-height:1.65;}
 
-/* ====== HIGHLIGHT BOX ====== */
-.highlight-box{
-  background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.25);
-  border-radius:16px;padding:28px 32px;margin-top:28px;
+/* ── Highlight box ── */
+.hl{
+  background:var(--pl);border:1px solid rgba(79,70,229,.2);
+  border-right:4px solid var(--p);border-radius:10px;padding:16px 18px;
+  margin:16px 0;
 }
-.highlight-box p{font-size:0.95rem;color:#B0B0D0;line-height:1.85;}
-.highlight-box strong{color:#C4B5FD;}
+.hl p{font-size:.85rem;color:var(--tm);line-height:1.75;}
+.hl strong{color:var(--p);}
 
-/* ====== SCREEN MOCKUP ====== */
-.screen-section{margin-bottom:56px;}
-.screen-label{
-  display:flex;align-items:center;gap:14px;margin-bottom:24px;
+/* ── Flow diagram ── */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;justify-content:center;margin:18px 0;}
+.fn{
+  background:var(--p);color:white;border-radius:8px;
+  padding:7px 14px;font-size:.75rem;font-weight:700;white-space:nowrap;
 }
+.fa{color:var(--p);padding:0 6px;font-size:1rem;opacity:.6;}
+
+/* ── Screen mockup ── */
+.screen-wrap{margin-bottom:28px;}
+.screen-label{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
 .screen-num{
-  width:36px;height:36px;border-radius:50%;
-  background:linear-gradient(135deg,var(--primary),#9F7AEA);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:0.9rem;color:white;flex-shrink:0;
-  box-shadow:0 4px 12px rgba(124,58,237,0.35);
+  width:32px;height:32px;border-radius:50%;
+  background:var(--p);color:white;display:flex;align-items:center;justify-content:center;
+  font-size:.82rem;font-weight:800;flex-shrink:0;
 }
-.screen-name{font-size:1.1rem;font-weight:700;color:var(--text);}
-.screen-url{font-size:0.8rem;color:var(--muted);margin-top:2px;font-family:monospace;}
+.screen-name{font-size:.95rem;font-weight:700;color:var(--td);}
+.screen-url{font-size:.72rem;color:var(--tl);font-family:monospace;margin-top:1px;}
 
 .mockup{
-  background:var(--card2);border:1px solid var(--border);border-radius:16px;
-  overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,.08);
 }
-.mockup-bar{
-  background:#0F0F1C;border-bottom:1px solid var(--border);
-  padding:12px 16px;display:flex;align-items:center;gap:8px;
+.mbar{
+  background:#F9FAFB;border-bottom:1px solid var(--border);
+  padding:8px 12px;display:flex;align-items:center;gap:7px;
 }
-.dot{width:10px;height:10px;border-radius:50%;}
-.dot-r{background:#EF4444;}.dot-y{background:#F59E0B;}.dot-g{background:#10B981;}
-.mockup-url{
-  flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);
-  border-radius:6px;padding:4px 12px;font-size:0.75rem;color:var(--muted);
-  font-family:monospace;text-align:center;margin:0 12px;
+.dot{width:9px;height:9px;border-radius:50%;}
+.dr{background:#F87171;}.dy{background:#FBBF24;}.dg{background:#34D399;}
+.murl{
+  flex:1;background:white;border:1px solid var(--border);border-radius:5px;
+  padding:3px 10px;font-size:.68rem;color:var(--tl);font-family:monospace;
+  text-align:center;margin:0 10px;
 }
-.mockup-body{padding:28px 24px;min-height:280px;}
+.mbody{padding:14px;background:white;}
 
-/* Mockup components */
-.m-navbar{
-  background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.15);
-  border-radius:10px;padding:10px 16px;display:flex;
-  align-items:center;justify-content:space-between;margin-bottom:20px;
+/* — Navbar mock — */
+.mnav{
+  background:white;border:1px solid var(--border);border-radius:8px;
+  padding:8px 12px;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.05);
 }
-.m-logo-bar{width:100px;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--primary),var(--accent));}
-.m-nav-links{display:flex;gap:8px;}
-.m-nav-link{width:50px;height:8px;border-radius:4px;background:rgba(255,255,255,0.08);}
-.m-nav-link.active{background:rgba(124,58,237,0.4);}
+.mnav-brand{display:flex;align-items:center;gap:6px;}
+.mnav-logo{width:22px;height:22px;background:var(--p);border-radius:5px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:.55rem;}
+.mnav-name{font-size:.68rem;font-weight:800;color:var(--td);}
+.mnav-links{display:flex;gap:4px;}
+.mnav-link{padding:3px 8px;border-radius:5px;font-size:.62rem;color:var(--tl);font-weight:600;}
+.mnav-link.act{background:var(--pl);color:var(--p);}
 
-.m-hero{
-  background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,0.2) 0%,transparent 70%);
-  border:1px solid rgba(124,58,237,0.15);border-radius:12px;
-  padding:28px 20px;text-align:center;margin-bottom:20px;
+/* — Hero mock — */
+.mhero{
+  background:linear-gradient(135deg,var(--p),var(--pd));
+  border-radius:8px;padding:16px;text-align:center;margin-bottom:10px;
 }
-.m-hero-title{height:16px;background:linear-gradient(90deg,rgba(255,255,255,0.6),rgba(196,181,253,0.6));border-radius:8px;width:75%;margin:0 auto 10px;}
-.m-hero-sub{height:10px;background:rgba(255,255,255,0.12);border-radius:5px;width:55%;margin:0 auto 18px;}
-.m-btns{display:flex;gap:8px;justify-content:center;}
-.m-btn{height:30px;border-radius:8px;padding:0 18px;display:flex;align-items:center;}
-.m-btn-p{background:linear-gradient(135deg,var(--primary),#9F7AEA);}
-.m-btn-o{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);}
-.m-btn-label{height:8px;border-radius:4px;background:rgba(255,255,255,0.7);width:50px;}
-.m-btn-o .m-btn-label{background:rgba(255,255,255,0.3);}
+.mhero-badge{display:inline-block;background:rgba(255,255,255,.15);padding:2px 10px;border-radius:100px;font-size:.58rem;color:white;margin-bottom:6px;}
+.mhero-h1{font-size:.72rem;font-weight:800;color:white;margin-bottom:4px;line-height:1.4;}
+.mhero-sub{font-size:.6rem;color:rgba(255,255,255,.75);margin-bottom:8px;}
+.mhero-btns{display:flex;gap:6px;justify-content:center;}
+.mbtn{padding:4px 12px;border-radius:6px;font-size:.6rem;font-weight:700;}
+.mbtn-w{background:white;color:var(--p);}
+.mbtn-o{background:transparent;border:1px solid rgba(255,255,255,.5);color:white;}
 
-.m-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.m-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;}
-.m-card-icon{width:28px;height:28px;background:var(--primary-light);border-radius:6px;margin-bottom:8px;}
-.m-card-title{height:8px;background:rgba(255,255,255,0.25);border-radius:4px;width:70%;margin-bottom:6px;}
-.m-card-text{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;width:90%;}
-.m-card-text2{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;width:75%;margin-top:4px;}
+/* — Feature cards mock — */
+.mfg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.mfc{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px;}
+.mfc-icon{width:20px;height:20px;background:var(--pl);border-radius:4px;margin-bottom:5px;display:flex;align-items:center;justify-content:center;font-size:.65rem;}
+.mfc-t{height:5px;background:rgba(17,24,39,.2);border-radius:3px;width:70%;margin-bottom:4px;}
+.mfc-b{height:4px;background:rgba(17,24,39,.1);border-radius:2px;width:90%;}
+.mfc-b2{height:4px;background:rgba(17,24,39,.07);border-radius:2px;width:75%;margin-top:3px;}
 
-.m-question-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
-.m-q-label{height:9px;background:rgba(255,255,255,0.2);border-radius:4px;width:65%;margin-bottom:10px;}
-.m-radio-row{display:flex;gap:6px;flex-direction:column;}
-.m-radio{display:flex;align-items:center;gap:8px;}
-.m-radio-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.15);flex-shrink:0;}
-.m-radio-dot.sel{background:var(--primary);border-color:var(--primary);}
-.m-radio-label{height:7px;background:rgba(255,255,255,0.12);border-radius:3px;flex:1;}
+/* — Stats row — */
+.mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.mstat{background:white;border:1px solid var(--border);border-radius:7px;padding:8px;text-align:center;}
+.mstat-v{font-size:.85rem;font-weight:800;color:var(--p);}
+.mstat-l{font-size:.55rem;color:var(--tl);margin-top:2px;}
 
-.m-score-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;margin-bottom:14px;}
-.m-score-circle{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#059669,#10B981);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(16,185,129,0.3);}
-.m-score-num{color:white;font-weight:800;font-size:1.2rem;}
-.m-score-label{height:8px;background:rgba(255,255,255,0.15);border-radius:4px;width:50%;margin:0 auto;}
+/* — Steps mock — */
+.msteps{display:flex;flex-direction:column;gap:8px;}
+.mstep{display:flex;align-items:flex-start;gap:8px;}
+.mstep-n{width:18px;height:18px;border-radius:50%;background:var(--p);color:white;font-size:.58rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.mstep-body{flex:1;}
+.mstep-t{height:5px;background:rgba(17,24,39,.22);border-radius:3px;width:55%;margin-bottom:3px;}
+.mstep-s{height:4px;background:rgba(17,24,39,.1);border-radius:2px;width:90%;}
 
-.m-issue-card{background:var(--card);border:1px solid var(--border);border-right:3px solid var(--danger);border-radius:10px;padding:12px;margin-bottom:8px;}
-.m-issue-card.warn{border-right-color:var(--warning);}
-.m-issue-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.m-severity{height:18px;border-radius:100px;padding:0 10px;background:rgba(239,68,68,0.15);width:60px;}
-.m-severity.warn{background:rgba(245,158,11,0.15);}
-.m-issue-text{height:7px;background:rgba(255,255,255,0.18);border-radius:3px;width:80%;margin-bottom:5px;}
-.m-issue-sub{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;width:95%;}
+/* — Survey mock — */
+.mq{background:white;border:1px solid var(--border);border-radius:7px;padding:8px;margin-bottom:6px;}
+.mq-lbl{font-size:.56rem;color:var(--p);font-weight:700;margin-bottom:3px;}
+.mq-text{height:5px;background:rgba(17,24,39,.2);border-radius:3px;width:75%;margin-bottom:7px;}
+.mopts{display:flex;flex-direction:column;gap:4px;}
+.mopt{display:flex;align-items:center;gap:5px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;}
+.mopt.sel{border-color:var(--p);background:var(--pl);}
+.mopt-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;}
+.mopt.sel .mopt-dot{background:var(--p);border-color:var(--p);}
+.mopt-l{height:4px;background:rgba(17,24,39,.12);border-radius:2px;flex:1;}
+.mopt.sel .mopt-l{background:rgba(79,70,229,.3);}
 
-.m-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
-.m-stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
-.m-stat-val{height:20px;background:rgba(167,139,250,0.4);border-radius:6px;margin-bottom:6px;}
-.m-stat-lbl{height:7px;background:rgba(255,255,255,0.1);border-radius:3px;}
+/* — Score mock — */
+.mscore-card{background:white;border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;margin-bottom:8px;}
+.mscore-c{width:54px;height:54px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;}
+.mscore-high{background:var(--okl);color:var(--ok);border:2.5px solid var(--ok);}
+.mscore-med{background:var(--wal);color:var(--wa);border:2.5px solid var(--wa);}
+.mscore-low{background:var(--erl);color:var(--er);border:2.5px solid var(--er);}
+.mscore-lbl{font-size:.6rem;color:var(--tl);margin-bottom:4px;}
+.mscore-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:.58rem;font-weight:700;}
+.mb-ok{background:var(--okl);color:var(--ok);}
+.mb-wa{background:var(--wal);color:var(--wa);}
+.mb-er{background:var(--erl);color:var(--er);}
 
-.m-success-box{
-  background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);
-  border-radius:14px;padding:28px;text-align:center;
+/* — Issue cards mock — */
+.missue{background:white;border:1px solid var(--border);border-right:3px solid var(--er);border-radius:7px;padding:8px;margin-bottom:5px;}
+.missue.med{border-right-color:var(--wa);}
+.missue.low{border-right-color:#60A5FA;}
+.missue-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.missue-sev{padding:2px 8px;border-radius:100px;font-size:.55rem;font-weight:700;}
+.ms-hi{background:var(--erl);color:var(--er);}
+.ms-me{background:var(--wal);color:var(--wa);}
+.ms-lo{background:#EFF6FF;color:#2563EB;}
+.missue-ded{font-size:.6rem;font-weight:700;color:var(--er);}
+.missue-msg{height:5px;background:rgba(17,24,39,.22);border-radius:3px;width:80%;margin-bottom:4px;}
+.missue-exp{height:4px;background:rgba(17,24,39,.1);border-radius:2px;width:95%;margin-bottom:3px;}
+.missue-act{height:4px;background:rgba(79,70,229,.2);border-radius:2px;width:70%;}
+
+/* — DB stats mock — */
+.mdbg{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px;}
+.mdbstat{background:white;border:1px solid var(--border);border-radius:6px;padding:7px;text-align:center;}
+.mdbval{font-size:.8rem;font-weight:800;}
+.mdblbl{height:4px;background:rgba(17,24,39,.1);border-radius:2px;margin-top:3px;}
+.mbars{background:white;border:1px solid var(--border);border-radius:7px;padding:8px;}
+.mbar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.mbar-lbl{font-size:.6rem;color:var(--tl);width:85px;text-align:right;flex-shrink:0;}
+.mbar-track{flex:1;background:var(--bg);border-radius:3px;height:7px;}
+.mbar-fill{height:7px;border-radius:3px;}
+.mbar-cnt{font-size:.6rem;font-weight:700;color:var(--tm);width:18px;text-align:left;}
+
+/* — Success/Error mock — */
+.mres{background:white;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;max-width:200px;margin:0 auto;}
+.mres-icon{width:40px;height:40px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.mres-ok{background:var(--okl);border:2px solid var(--ok);color:var(--ok);}
+.mres-er{background:var(--erl);border:2px solid var(--er);color:var(--er);}
+.mres-t{height:7px;background:rgba(17,24,39,.2);border-radius:4px;width:65%;margin:0 auto 5px;}
+.mres-s{height:5px;background:rgba(17,24,39,.1);border-radius:3px;width:85%;margin:0 auto 10px;}
+.mres-rows{background:var(--bg);border-radius:6px;padding:8px;text-align:right;margin-bottom:10px;}
+.mres-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);}
+.mres-row:last-child{border:none;}
+.mrk{height:4px;width:35%;background:rgba(17,24,39,.1);border-radius:2px;}
+.mrv{height:4px;width:30%;border-radius:2px;}
+.mrv-ok{background:rgba(16,185,129,.4);}
+.mrv-p{background:rgba(79,70,229,.4);}
+.mres-btns{display:flex;gap:5px;justify-content:center;}
+.mres-btn{padding:4px 10px;border-radius:6px;font-size:.6rem;font-weight:700;}
+.mres-btn-p{background:var(--p);color:white;}
+.mres-btn-s{background:white;border:1px solid var(--border);color:var(--td);}
+
+/* — Timer mock — */
+.mtimer{background:white;border:1px solid var(--border);border-radius:6px;padding:6px 10px;display:flex;justify-content:space-between;margin-bottom:6px;font-size:.62rem;}
+.mtimer-lbl{color:var(--tl);}
+.mtimer-val{font-weight:700;color:var(--p);font-family:monospace;}
+.mprog{background:white;border:1px solid var(--border);border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.mprog-track{flex:1;background:var(--bg);border-radius:3px;height:5px;}
+.mprog-fill{height:5px;border-radius:3px;background:var(--p);}
+.mprog-txt{font-size:.6rem;color:var(--tl);}
+
+/* — Screen description — */
+.sdesc{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:8px;}
+.sdesc h5{font-size:.78rem;font-weight:700;color:var(--p);margin-bottom:8px;}
+.sdesc ul{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.sdesc li{font-size:.75rem;color:var(--tm);display:flex;align-items:flex-start;gap:6px;line-height:1.5;}
+.sdesc li::before{content:'◆';color:var(--p);font-size:.45rem;margin-top:4px;flex-shrink:0;}
+
+/* — Journey — */
+.journey{display:flex;flex-direction:column;gap:0;margin-top:20px;}
+.jstep{
+  display:flex;align-items:flex-start;gap:16px;padding:14px 0;
+  border-right:2px solid rgba(79,70,229,.25);margin-right:12px;position:relative;
 }
-.m-success-icon{width:56px;height:56px;border-radius:50%;background:rgba(16,185,129,0.15);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#34D399;}
-.m-success-title{height:14px;background:rgba(52,211,153,0.35);border-radius:7px;width:60%;margin:0 auto 10px;}
-.m-success-sub{height:9px;background:rgba(255,255,255,0.1);border-radius:4px;width:80%;margin:0 auto;}
+.jstep::before{content:'';position:absolute;right:-7px;top:18px;width:12px;height:12px;border-radius:50%;background:var(--p);box-shadow:0 0 0 3px var(--pl);}
+.jstep:last-child{border-right-color:transparent;}
+.jcontent{padding-right:16px;flex:1;}
+.jtag{display:inline-block;background:var(--pl);color:var(--p);padding:2px 10px;border-radius:100px;font-size:.68rem;font-weight:700;margin-bottom:5px;}
+.jt{font-size:.85rem;font-weight:700;color:var(--td);margin-bottom:4px;}
+.jb{font-size:.78rem;color:var(--tl);line-height:1.65;}
 
-.m-error-box{
-  background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);
-  border-radius:14px;padding:28px;text-align:center;
-}
-.m-error-icon{width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,0.12);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#FCA5A5;}
-.m-error-title{height:14px;background:rgba(252,165,165,0.3);border-radius:7px;width:50%;margin:0 auto 10px;}
-.m-error-sub{height:9px;background:rgba(255,255,255,0.1);border-radius:4px;width:75%;margin:0 auto;}
+/* — Rules table — */
+.rtable{width:100%;border-collapse:collapse;margin-top:14px;font-size:.8rem;}
+.rtable th{background:var(--bg);padding:8px 12px;text-align:right;font-weight:700;color:var(--tl);border-bottom:1px solid var(--border);}
+.rtable td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.rtable tr:last-child td{border:none;}
+.rchip{background:var(--pl);color:var(--p);padding:2px 8px;border-radius:100px;font-size:.7rem;font-weight:700;}
+.sev-tag{padding:2px 8px;border-radius:100px;font-size:.68rem;font-weight:700;}
+.sev-h{background:var(--erl);color:var(--er);}
+.sev-m{background:var(--wal);color:var(--wa);}
+.sev-l{background:#EFF6FF;color:#2563EB;}
 
-.m-footer{
-  background:rgba(255,255,255,0.02);border-top:1px solid var(--border);
-  border-radius:0 0 12px 12px;padding:10px 16px;text-align:center;
-}
-.m-footer-text{height:7px;background:rgba(255,255,255,0.08);border-radius:3px;width:50%;margin:0 auto;}
+/* ── Page number ── */
+.pg-num{position:absolute;bottom:12mm;left:18mm;font-size:.7rem;color:var(--tl);}
+.pg-foot{position:absolute;bottom:12mm;right:18mm;font-size:.7rem;color:var(--tl);}
 
-/* ====== SCREEN DESCRIPTION ====== */
-.screen-desc{
-  background:var(--card);border:1px solid var(--border);border-radius:12px;
-  padding:20px 24px;margin-top:14px;
-}
-.screen-desc h4{font-size:0.9rem;font-weight:700;color:#A78BFA;margin-bottom:10px;}
-.screen-desc ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
-.screen-desc ul li{font-size:0.875rem;color:#8B8BAA;display:flex;align-items:flex-start;gap:8px;}
-.screen-desc ul li::before{content:'◆';color:var(--primary);font-size:0.5rem;margin-top:5px;flex-shrink:0;}
-
-/* ====== JOURNEY ====== */
-.journey-flow{display:flex;flex-direction:column;gap:0;margin-top:32px;}
-.journey-step{
-  display:flex;align-items:flex-start;gap:20px;padding:20px 0;
-  border-right:2px solid rgba(124,58,237,0.3);margin-right:16px;
-  position:relative;
-}
-.journey-step::before{
-  content:'';position:absolute;right:-7px;top:24px;
-  width:12px;height:12px;border-radius:50%;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  box-shadow:0 0 12px rgba(124,58,237,0.5);
-}
-.journey-step:last-child{border-right-color:transparent;}
-.journey-content{padding-right:20px;flex:1;}
-.journey-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
-.journey-body{font-size:0.875rem;color:#8B8BAA;line-height:1.7;}
-.journey-tag{
-  display:inline-block;background:rgba(124,58,237,0.12);
-  border:1px solid rgba(124,58,237,0.25);color:#A78BFA;
-  padding:3px 12px;border-radius:100px;font-size:0.75rem;font-weight:600;
-  margin-bottom:8px;
-}
-
-/* ====== FLOW DIAGRAM ====== */
-.flow-diagram{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:28px 0;justify-content:center;}
-.flow-node{
-  background:var(--card2);border:1px solid rgba(124,58,237,0.3);
-  border-radius:10px;padding:10px 18px;text-align:center;
-  font-size:0.8rem;font-weight:600;color:#C4B5FD;white-space:nowrap;
-}
-.flow-arrow{color:var(--primary);font-size:1.4rem;padding:0 4px;opacity:0.7;}
-
-/* ====== PRINT ====== */
-@media print {
+/* ── Print ── */
+@media print{
+  body{background:white;}
   .print-btn{display:none;}
-  .proto-page{page-break-after:always;max-width:100%;padding:40px;}
-  body{background:#0A0A12;}
+  .pg{margin:0;box-shadow:none;page-break-after:always;}
+  .pg:last-of-type{page-break-after:avoid;}
 }
 </style>
 </head>
 <body>
 
-<button class="print-btn" onclick="window.print()">طباعة / تصدير PDF</button>
+<button class="print-btn" onclick="window.print()">🖨 طباعة / تصدير PDF</button>
 
-<!-- ============================================================ -->
-<!-- PAGE 1: COVER                                                 -->
-<!-- ============================================================ -->
-<div class="proto-page cover">
-  <img src="/static/images/logo.svg" alt="TrustLayer AI" class="cover-logo"/>
-  <div class="cover-badge">نموذج أولي — Prototype v1.0</div>
-  <h1 class="cover-title">TrustLayer AI</h1>
-  <p class="cover-subtitle">نظام وسيط ذكي لضمان جودة بيانات الاستبيانات</p>
+<!-- ══════════════════════════════════════════════════
+  PAGE 1: COVER
+══════════════════════════════════════════════════ -->
+<div class="pg cover">
+  <div class="cover-logo-box">TL</div>
+  <div class="cover-badge">Prototype v1.0 — نموذج أولي</div>
+  <h1>TrustLayer AI</h1>
+  <p class="cover-sub">نظام وسيط ذكي لضمان جودة بيانات الاستبيانات<br/>يكتشف التناقضات لحظياً ويحسب درجة الثقة</p>
+  <div class="cover-chips">
+    <div class="cover-chip">🐍 Python + FastAPI</div>
+    <div class="cover-chip">🗄️ SQLite</div>
+    <div class="cover-chip">🤖 Claude AI</div>
+    <div class="cover-chip">🌐 HTML/CSS/JS</div>
+  </div>
   <div class="cover-divider"></div>
   <p class="cover-team">تم التطوير بواسطة <strong>فريق بالمرصاد</strong></p>
-  <p class="cover-date">2026</p>
+  <p class="cover-date">2026 — هاكاثون</p>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE 2: IDEA · PROBLEM · SOLUTION                            -->
-<!-- ============================================================ -->
-<div class="proto-page">
-  <div class="sec-header">
-    <div class="sec-chip">الفكرة والمشكلة والحل</div>
-    <h2 class="sec-title">نظرة عامة على النظام</h2>
-    <p class="sec-desc">يقدم هذا القسم الفكرة الجوهرية للمشروع، المشكلة التي يعالجها، والحل الذي يقدمه TrustLayer AI.</p>
+<!-- ══════════════════════════════════════════════════
+  PAGE 2: OVERVIEW
+══════════════════════════════════════════════════ -->
+<div class="pg">
+  <div class="pg-head">
+    <div class="pg-chip">نظرة عامة</div>
+    <div class="pg-title">الفكرة · المشكلة · الحل</div>
+    <div class="pg-desc">السياق العام لمشروع TrustLayer AI وكيف يعالج مشكلة جودة بيانات الاستبيانات.</div>
   </div>
 
-  <div class="info-grid">
-    <div class="info-card">
-      <div class="info-card-icon">💡</div>
-      <div class="info-card-title">الفكرة</div>
-      <div class="info-card-body">
-        إنشاء نظام وسيط (Middleware) يجلس بين منصة الاستبيان وقاعدة البيانات، يتحقق من جودة الإجابات لحظياً باستخدام قواعد منطقية وتحليل ذكاء اصطناعي، ويُمكّن المستخدم من تصحيح بياناته قبل الحفظ النهائي.
-      </div>
-    </div>
-    <div class="info-card">
-      <div class="info-card-icon">⚠️</div>
-      <div class="info-card-title">المشكلة</div>
-      <div class="info-card-body">
-        تُعاني مستودعات البيانات من بيانات استبيانية منخفضة الجودة تحتوي على تناقضات منطقية ودلالية، مما يُضعف موثوقية التحليلات ويستهلك وقتاً طويلاً في التنظيف اليدوي بعد الجمع.
-      </div>
-    </div>
-    <div class="info-card">
-      <div class="info-card-icon">✅</div>
-      <div class="info-card-title">الحل</div>
-      <div class="info-card-body">
-        TrustLayer AI يكتشف التناقضات فور إدخال الإجابات ويشرح المشكلة للمستخدم بلغة عربية واضحة، ويمنحه فرصة التصحيح قبل الإرسال، مما يضمن تخزين بيانات عالية الجودة فقط.
-      </div>
+  <div class="g3" style="margin-bottom:20px;">
+    <div class="ic"><div class="ic-icon">💡</div><div class="ic-title">الفكرة</div><div class="ic-body">إنشاء نظام وسيط (Middleware) يجلس بين منصة الاستبيان وقاعدة البيانات، يتحقق من جودة الإجابات لحظياً ويُمكّن المستخدم من التصحيح قبل الحفظ.</div></div>
+    <div class="ic"><div class="ic-icon">⚠️</div><div class="ic-title">المشكلة</div><div class="ic-body">تُعاني مستودعات البيانات من تناقضات منطقية ودلالية في إجابات الاستبيانات، مما يُضعف موثوقية التحليلات ويستهلك وقتاً في التنظيف اليدوي.</div></div>
+    <div class="ic"><div class="ic-icon">✅</div><div class="ic-title">الحل</div><div class="ic-body">TrustLayer AI يكتشف التناقضات فور الإدخال ويشرحها بالعربية، ويمنح المستخدم فرصة التصحيح قبل الإرسال لضمان تخزين بيانات عالية الجودة فقط.</div></div>
+  </div>
+
+  <div class="hl">
+    <p><strong>كيف يعمل؟</strong> — يستقبل إجابات الاستبيان، يُشغّل <strong>6 قواعد تحقق منطقية</strong>، ثم يستدعي <strong>Claude AI</strong> لاكتشاف التناقضات الدلالية. تُحسب درجة الثقة (0–100) وتُصنَّف: <strong style="color:#10B981">عالية ≥ 90</strong> — <strong style="color:#F59E0B">متوسطة ≥ 70</strong> — <strong style="color:#EF4444">منخفضة &lt; 70</strong>. البيانات تُحفظ فقط بعد تأكيد المستخدم.</p>
+  </div>
+
+  <div style="margin-bottom:20px;">
+    <div style="font-size:.78rem;font-weight:700;color:var(--tl);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;">مسار البيانات</div>
+    <div class="flow">
+      <div class="fn">الاستبيان</div><div class="fa">←</div>
+      <div class="fn">6 قواعد تحقق</div><div class="fa">←</div>
+      <div class="fn">Claude AI</div><div class="fa">←</div>
+      <div class="fn">درجة الثقة</div><div class="fa">←</div>
+      <div class="fn">مراجعة المستخدم</div><div class="fa">←</div>
+      <div class="fn">قاعدة البيانات</div>
     </div>
   </div>
 
-  <div class="highlight-box">
-    <p>
-      <strong>كيف يعمل؟</strong> — يستقبل النظام إجابات الاستبيان، يُشغّل عليها <strong>6 قواعد تحقق منطقية</strong>، ثم يستدعي <strong>نموذج الذكاء الاصطناعي (Claude AI)</strong> لاكتشاف التناقضات الدلالية الخفية التي لا تغطيها القواعد. تُحسب درجة الثقة تلقائياً (0–100)، وتُحدَّد مستوى الجودة: <strong style="color:#34D399">عالية ≥ 90</strong> — <strong style="color:#FCD34D">متوسطة ≥ 70</strong> — <strong style="color:#FCA5A5">منخفضة &lt; 70</strong>. تُحفظ البيانات فقط بعد تأكيد المستخدم.
-    </p>
-  </div>
-
-  <div style="margin-top:36px;">
-    <div class="sec-chip" style="margin-bottom:16px;">مسار البيانات</div>
-    <div class="flow-diagram">
-      <div class="flow-node">الاستبيان</div>
-      <div class="flow-arrow">←</div>
-      <div class="flow-node">قواعد التحقق</div>
-      <div class="flow-arrow">←</div>
-      <div class="flow-node">تحليل الذكاء الاصطناعي</div>
-      <div class="flow-arrow">←</div>
-      <div class="flow-node">درجة الثقة</div>
-      <div class="flow-arrow">←</div>
-      <div class="flow-node">مراجعة المستخدم</div>
-      <div class="flow-arrow">←</div>
-      <div class="flow-node">قاعدة البيانات</div>
+  <div class="g2">
+    <div class="ic">
+      <div class="ic-title" style="margin-bottom:10px;">📐 المواصفات التقنية</div>
+      <div class="ic-body" style="line-height:2;">
+        <b>Backend:</b> Python + FastAPI<br/>
+        <b>Database:</b> SQLite (3 جداول)<br/>
+        <b>Frontend:</b> HTML/CSS/JS + Jinja2<br/>
+        <b>AI:</b> Claude Haiku (Anthropic API)<br/>
+        <b>الواجهة:</b> عربية RTL — خط Cairo
+      </div>
+    </div>
+    <div class="ic">
+      <div class="ic-title" style="margin-bottom:10px;">📊 إحصائيات الأداء</div>
+      <div class="ic-body" style="line-height:2;">
+        <b>دقة الكشف (Precision):</b> 92.4%<br/>
+        <b>معدل الاستدعاء (Recall):</b> 90.1%<br/>
+        <b>توفير وقت التنظيف:</b> 68%<br/>
+        <b>معدل الإكمال:</b> 87.3%<br/>
+        <b>قواعد التحقق:</b> 6 قواعد + AI
+      </div>
     </div>
   </div>
+
+  <div class="pg-num">2</div>
+  <div class="pg-foot">TrustLayer AI — نموذج أولي</div>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE 3: SCREENS 1–2                                          -->
-<!-- ============================================================ -->
-<div class="proto-page">
-  <div class="sec-header">
-    <div class="sec-chip">واجهات النظام</div>
-    <h2 class="sec-title">الشاشات — ١ من ٤</h2>
+<!-- ══════════════════════════════════════════════════
+  PAGE 3: VALIDATION RULES
+══════════════════════════════════════════════════ -->
+<div class="pg">
+  <div class="pg-head">
+    <div class="pg-chip">منطق التحقق</div>
+    <div class="pg-title">قواعد التحقق وحساب درجة الثقة</div>
+    <div class="pg-desc">النظام يُشغّل 6 قواعد منطقية مُحددة مسبقاً ثم تحليلاً دلالياً بالذكاء الاصطناعي.</div>
   </div>
 
-  <!-- Screen 1: Index -->
-  <div class="screen-section">
+  <table class="rtable">
+    <thead>
+      <tr><th>الكود</th><th>اسم القاعدة</th><th>الشرط المُشغِّل</th><th>الخطورة</th><th>الخصم</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="rchip">R-01</span></td>
+        <td>الدخل مقابل الإنفاق الفاخر</td>
+        <td>دخل &lt; 3,000 ريال + مشتريات فاخرة ≠ أبداً</td>
+        <td><span class="sev-tag sev-h">عالية</span></td>
+        <td style="color:var(--er);font-weight:700;">−30</td>
+      </tr>
+      <tr>
+        <td><span class="rchip">R-02</span></td>
+        <td>الإنترنت مقابل تقييم التطبيقات</td>
+        <td>إنترنت = لا + تقييم تطبيقات ≠ لا ينطبق</td>
+        <td><span class="sev-tag sev-m">متوسطة</span></td>
+        <td style="color:var(--wa);font-weight:700;">−15</td>
+      </tr>
+      <tr>
+        <td><span class="rchip">R-03</span></td>
+        <td>التلفاز مقابل القنوات المفضلة</td>
+        <td>تلفاز = لا + قنوات مفضلة ≠ لا شيء</td>
+        <td><span class="sev-tag sev-m">متوسطة</span></td>
+        <td style="color:var(--wa);font-weight:700;">−15</td>
+      </tr>
+      <tr>
+        <td><span class="rchip">R-04</span></td>
+        <td>تكرار الشراء مقابل الإنفاق</td>
+        <td>شراء &gt; 6 مرات + إنفاق &lt; 50 ريال</td>
+        <td><span class="sev-tag sev-m">متوسطة</span></td>
+        <td style="color:var(--wa);font-weight:700;">−15</td>
+      </tr>
+      <tr>
+        <td><span class="rchip">R-05</span></td>
+        <td>العلامة المفضلة مقابل آخر مشتريات</td>
+        <td>العلامة المفضلة ≠ العلامة في آخر مشترياتك</td>
+        <td><span class="sev-tag sev-l">منخفضة</span></td>
+        <td style="color:#2563EB;font-weight:700;">−10</td>
+      </tr>
+      <tr>
+        <td><span class="rchip">R-06</span></td>
+        <td>سرعة الاستجابة</td>
+        <td>وقت الاستجابة &lt; 15 ثانية</td>
+        <td><span class="sev-tag sev-l">منخفضة</span></td>
+        <td style="color:#2563EB;font-weight:700;">−5</td>
+      </tr>
+      <tr style="background:var(--pl);">
+        <td><span class="rchip">AI</span></td>
+        <td>التحليل الدلالي (Claude AI)</td>
+        <td>تناقض دلالي خفي غير مشمول بالقواعد</td>
+        <td><span class="sev-tag sev-m">متوسطة</span></td>
+        <td style="color:var(--wa);font-weight:700;">−15</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+    <div style="background:var(--okl);border:1px solid rgba(16,185,129,.3);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:900;color:var(--ok);">90–100</div>
+      <div style="font-size:.78rem;color:var(--ok);font-weight:700;margin-top:4px;">جودة عالية ✓</div>
+      <div style="font-size:.72rem;color:var(--tl);margin-top:4px;">لا توجد مشكلات أو مشكلات طفيفة</div>
+    </div>
+    <div style="background:var(--wal);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:900;color:var(--wa);">70–89</div>
+      <div style="font-size:.78rem;color:var(--wa);font-weight:700;margin-top:4px;">جودة متوسطة ⚠</div>
+      <div style="font-size:.72rem;color:var(--tl);margin-top:4px;">مشكلة أو اثنتان متوسطتا الخطورة</div>
+    </div>
+    <div style="background:var(--erl);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.5rem;font-weight:900;color:var(--er);">&lt; 70</div>
+      <div style="font-size:.78rem;color:var(--er);font-weight:700;margin-top:4px;">جودة منخفضة ✗</div>
+      <div style="font-size:.72rem;color:var(--tl);margin-top:4px;">مشكلات متعددة أو خطورة عالية</div>
+    </div>
+  </div>
+
+  <div class="hl" style="margin-top:16px;">
+    <p><strong>ملاحظة تقنية:</strong> تبدأ الدرجة من 100 وتُخفَّض تراكمياً. لا يُضاف خصم AI إذا كان التناقض نفسه مشمولاً بقاعدة منطقية مسبقاً. الحد الأدنى للدرجة = 0.</p>
+  </div>
+
+  <div class="pg-num">3</div>
+  <div class="pg-foot">TrustLayer AI — نموذج أولي</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  PAGE 4: SCREENS 1 & 2
+══════════════════════════════════════════════════ -->
+<div class="pg">
+  <div class="pg-head">
+    <div class="pg-chip">الشاشات — ١ من ٤</div>
+    <div class="pg-title">الصفحة الرئيسية · كيف يعمل النظام؟</div>
+  </div>
+
+  <!-- Screen 1 -->
+  <div class="screen-wrap">
     <div class="screen-label">
       <div class="screen-num">١</div>
-      <div>
-        <div class="screen-name">الصفحة الرئيسية</div>
-        <div class="screen-url">localhost:8000/</div>
-      </div>
+      <div><div class="screen-name">الصفحة الرئيسية</div><div class="screen-url">localhost:8000/</div></div>
     </div>
     <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000</div>
-      </div>
-      <div class="mockup-body">
-        <div class="m-navbar">
-          <div class="m-logo-bar"></div>
-          <div class="m-nav-links">
-            <div class="m-nav-link active"></div>
-            <div class="m-nav-link"></div>
-            <div class="m-nav-link"></div>
-            <div class="m-nav-link"></div>
-          </div>
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000</div></div>
+      <div class="mbody">
+        <div class="mnav">
+          <div class="mnav-brand"><div class="mnav-logo">TL</div><span class="mnav-name">TrustLayer AI</span></div>
+          <div class="mnav-links"><span class="mnav-link act">الرئيسية</span><span class="mnav-link">كيف يعمل؟</span><span class="mnav-link">استخدم النظام</span><span class="mnav-link">لوحة التحكم</span></div>
         </div>
-        <div class="m-hero">
-          <div class="m-hero-title"></div>
-          <div class="m-hero-sub"></div>
-          <div class="m-btns">
-            <div class="m-btn m-btn-p"><div class="m-btn-label"></div></div>
-            <div class="m-btn m-btn-o"><div class="m-btn-label"></div></div>
-          </div>
+        <div class="mhero">
+          <div class="mhero-badge">نظام وسيط لجودة البيانات</div>
+          <div class="mhero-h1">ضمان جودة بيانات الاستبيانات من خلال اكتشاف التناقضات عند إدخالها</div>
+          <div class="mhero-sub">يدعم اتخاذ قرارات أدق بالاعتماد على بيانات موثوقة</div>
+          <div class="mhero-btns"><div class="mbtn mbtn-w">ابدأ الاستبيان</div><div class="mbtn mbtn-o">كيف يعمل؟</div></div>
         </div>
-        <div class="m-cards-grid">
-          <div class="m-card"><div class="m-card-icon"></div><div class="m-card-title"></div><div class="m-card-text"></div><div class="m-card-text2"></div></div>
-          <div class="m-card"><div class="m-card-icon"></div><div class="m-card-title"></div><div class="m-card-text"></div><div class="m-card-text2"></div></div>
-          <div class="m-card"><div class="m-card-icon"></div><div class="m-card-title"></div><div class="m-card-text"></div><div class="m-card-text2"></div></div>
+        <div class="mfg">
+          <div class="mfc"><div class="mfc-icon">⚡</div><div class="mfc-t"></div><div class="mfc-b"></div><div class="mfc-b2"></div></div>
+          <div class="mfc"><div class="mfc-icon">📊</div><div class="mfc-t"></div><div class="mfc-b"></div><div class="mfc-b2"></div></div>
+          <div class="mfc"><div class="mfc-icon">🤖</div><div class="mfc-t"></div><div class="mfc-b"></div><div class="mfc-b2"></div></div>
+        </div>
+        <div class="mstats">
+          <div class="mstat"><div class="mstat-v">92.4%</div><div class="mstat-l">دقة الكشف</div></div>
+          <div class="mstat"><div class="mstat-v">68%</div><div class="mstat-l">توفير الوقت</div></div>
+          <div class="mstat"><div class="mstat-v">90.1%</div><div class="mstat-l">معدل الاستدعاء</div></div>
         </div>
       </div>
-      <div class="m-footer"><div class="m-footer-text"></div></div>
     </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>قسم Hero بعنوان رئيسي وزرّي "ابدأ الاستبيان" و"كيف يعمل؟"</li>
-        <li>شبكة بطاقات تعرض 6 مزايا رئيسية للنظام مع أيقونات</li>
-        <li>قسم الأرقام: دقة النظام 92.4% — توفير وقت 68% — معدل اكتشاف 90.1%</li>
-        <li>شريط التقنيات المستخدمة في أسفل الصفحة</li>
-      </ul>
-    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>قسم Hero بعنوان رئيسي وزرَّي "ابدأ الاستبيان" و"كيف يعمل؟" على خلفية متدرجة</li>
+      <li>شبكة 6 بطاقات تعرض المزايا الرئيسية للنظام مع أيقونات</li>
+      <li>قسم إحصائيات: دقة 92.4% — توفير وقت 68% — استدعاء 90.1%</li>
+      <li>شريط التقنيات (Python, SQLite, Claude AI, HTML/JS) في أسفل الصفحة</li>
+    </ul></div>
   </div>
 
-  <!-- Screen 2: How it works -->
-  <div class="screen-section">
+  <!-- Screen 2 -->
+  <div class="screen-wrap">
     <div class="screen-label">
       <div class="screen-num">٢</div>
-      <div>
-        <div class="screen-name">كيف يعمل النظام؟</div>
-        <div class="screen-url">localhost:8000/how-it-works</div>
-      </div>
+      <div><div class="screen-name">كيف يعمل النظام؟</div><div class="screen-url">localhost:8000/how-it-works</div></div>
     </div>
     <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000/how-it-works</div>
-      </div>
-      <div class="mockup-body">
-        <div class="m-navbar">
-          <div class="m-logo-bar"></div>
-          <div class="m-nav-links">
-            <div class="m-nav-link"></div>
-            <div class="m-nav-link active"></div>
-            <div class="m-nav-link"></div>
-            <div class="m-nav-link"></div>
-          </div>
-        </div>
-        <div class="m-cards-grid" style="margin-bottom:14px;">
-          <div class="m-card" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.2);">
-            <div class="m-card-icon" style="background:linear-gradient(135deg,var(--primary),#9F7AEA);"></div>
-            <div class="m-card-title" style="background:rgba(167,139,250,0.4);"></div>
-            <div class="m-card-text"></div><div class="m-card-text2"></div>
-          </div>
-          <div class="m-card" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.2);">
-            <div class="m-card-icon" style="background:linear-gradient(135deg,var(--primary),#9F7AEA);"></div>
-            <div class="m-card-title" style="background:rgba(167,139,250,0.4);"></div>
-            <div class="m-card-text"></div><div class="m-card-text2"></div>
-          </div>
-          <div class="m-card" style="background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.2);">
-            <div class="m-card-icon" style="background:linear-gradient(135deg,var(--primary),#9F7AEA);"></div>
-            <div class="m-card-title" style="background:rgba(167,139,250,0.4);"></div>
-            <div class="m-card-text"></div><div class="m-card-text2"></div>
-          </div>
-        </div>
-        <div class="flow-diagram" style="margin:0;">
-          <div class="flow-node" style="font-size:0.7rem;padding:7px 12px;">الاستبيان</div>
-          <div class="flow-arrow" style="font-size:1rem;">←</div>
-          <div class="flow-node" style="font-size:0.7rem;padding:7px 12px;">القواعد</div>
-          <div class="flow-arrow" style="font-size:1rem;">←</div>
-          <div class="flow-node" style="font-size:0.7rem;padding:7px 12px;">الذكاء الاصطناعي</div>
-          <div class="flow-arrow" style="font-size:1rem;">←</div>
-          <div class="flow-node" style="font-size:0.7rem;padding:7px 12px;">قاعدة البيانات</div>
-        </div>
-      </div>
-      <div class="m-footer"><div class="m-footer-text"></div></div>
-    </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>شرح مرحلي لكيفية عمل النظام عبر بطاقات مرقمة</li>
-        <li>مخطط تدفق البيانات من الإدخال حتى التخزين</li>
-        <li>وصف القواعد المنطقية الست المدمجة في النظام</li>
-        <li>توضيح دور نموذج الذكاء الاصطناعي Claude في التحليل الدلالي</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- PAGE 4: SCREENS 3–4                                          -->
-<!-- ============================================================ -->
-<div class="proto-page">
-  <div class="sec-header">
-    <div class="sec-chip">واجهات النظام</div>
-    <h2 class="sec-title">الشاشات — ٢ من ٤</h2>
-  </div>
-
-  <!-- Screen 3: Use System -->
-  <div class="screen-section">
-    <div class="screen-label">
-      <div class="screen-num">٣</div>
-      <div>
-        <div class="screen-name">استخدم النظام</div>
-        <div class="screen-url">localhost:8000/use-system</div>
-      </div>
-    </div>
-    <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000/use-system</div>
-      </div>
-      <div class="mockup-body">
-        <div class="m-navbar">
-          <div class="m-logo-bar"></div>
-          <div class="m-nav-links">
-            <div class="m-nav-link"></div><div class="m-nav-link"></div>
-            <div class="m-nav-link active"></div><div class="m-nav-link"></div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
-          <div style="background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:10px;padding:16px;">
-            <div style="height:10px;background:rgba(167,139,250,0.5);border-radius:5px;width:60%;margin-bottom:10px;"></div>
-            <div style="height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:5px;"></div>
-            <div style="height:7px;background:rgba(255,255,255,0.07);border-radius:3px;width:80%;"></div>
-          </div>
-          <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:16px;">
-            <div style="height:10px;background:rgba(6,182,212,0.5);border-radius:5px;width:55%;margin-bottom:10px;"></div>
-            <div style="height:7px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:5px;"></div>
-            <div style="height:7px;background:rgba(255,255,255,0.07);border-radius:3px;width:75%;"></div>
-          </div>
-        </div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;">
-          <div style="height:9px;background:rgba(255,255,255,0.15);border-radius:4px;width:40%;margin-bottom:12px;"></div>
-          <div style="display:flex;flex-direction:column;gap:6px;">
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(124,58,237,0.3);flex-shrink:0;"></div><div style="height:7px;background:rgba(255,255,255,0.12);border-radius:3px;flex:1;"></div></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(124,58,237,0.3);flex-shrink:0;"></div><div style="height:7px;background:rgba(255,255,255,0.12);border-radius:3px;flex:1;"></div></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;border-radius:3px;background:rgba(124,58,237,0.3);flex-shrink:0;"></div><div style="height:7px;background:rgba(255,255,255,0.12);border-radius:3px;flex:1;"></div></div>
-          </div>
-        </div>
-      </div>
-      <div class="m-footer"><div class="m-footer-text"></div></div>
-    </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>دليل استخدام النظام خطوة بخطوة للمستخدم الجديد</li>
-        <li>متطلبات الاستخدام وشروط الإجابة الصحيحة</li>
-        <li>توضيح ما يحدث عند اكتشاف تناقض في الإجابات</li>
-        <li>زر مباشر للانتقال إلى الاستبيان</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Screen 4: Survey -->
-  <div class="screen-section">
-    <div class="screen-label">
-      <div class="screen-num">٤</div>
-      <div>
-        <div class="screen-name">الاستبيان</div>
-        <div class="screen-url">localhost:8000/survey</div>
-      </div>
-    </div>
-    <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000/survey</div>
-      </div>
-      <div class="mockup-body">
-        <div style="text-align:center;margin-bottom:16px;">
-          <div style="height:12px;background:rgba(255,255,255,0.2);border-radius:6px;width:35%;margin:0 auto 8px;"></div>
-          <div style="height:8px;background:rgba(255,255,255,0.08);border-radius:4px;width:60%;margin:0 auto;"></div>
-        </div>
-        <div class="m-question-card">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-            <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);border:1px solid rgba(124,58,237,0.3);"></div>
-            <div class="m-q-label" style="width:70%;"></div>
-          </div>
-          <div class="m-radio-row">
-            <div class="m-radio"><div class="m-radio-dot"></div><div class="m-radio-label"></div></div>
-            <div class="m-radio"><div class="m-radio-dot sel"></div><div class="m-radio-label" style="background:rgba(124,58,237,0.3);"></div></div>
-            <div class="m-radio"><div class="m-radio-dot"></div><div class="m-radio-label"></div></div>
-          </div>
-        </div>
-        <div class="m-question-card">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-            <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);border:1px solid rgba(124,58,237,0.3);"></div>
-            <div class="m-q-label" style="width:55%;"></div>
-          </div>
-          <div class="m-radio-row">
-            <div class="m-radio"><div class="m-radio-dot"></div><div class="m-radio-label"></div></div>
-            <div class="m-radio"><div class="m-radio-dot"></div><div class="m-radio-label"></div></div>
-          </div>
-        </div>
-        <div style="text-align:center;margin-top:14px;">
-          <div class="m-btn m-btn-p" style="display:inline-flex;padding:0 24px;height:34px;"><div class="m-btn-label" style="width:60px;"></div></div>
-        </div>
-      </div>
-      <div class="m-footer"><div class="m-footer-text"></div></div>
-    </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>11 سؤالاً بتصميم بطاقات واضح مع خيارات راديو تفاعلية</li>
-        <li>مؤقت مدمج يُسجّل زمن الاستجابة تلقائياً (يُستخدم في قاعدة R-06)</li>
-        <li>رسالة خطأ واضحة عند محاولة الإرسال قبل إكمال كل الأسئلة</li>
-        <li>عند الإرسال: يظهر مؤشر التحميل ريثما يُحلَّل النظام الإجابات</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- PAGE 5: SCREENS 5–6                                          -->
-<!-- ============================================================ -->
-<div class="proto-page">
-  <div class="sec-header">
-    <div class="sec-chip">واجهات النظام</div>
-    <h2 class="sec-title">الشاشات — ٣ من ٤</h2>
-  </div>
-
-  <!-- Screen 5: Review -->
-  <div class="screen-section">
-    <div class="screen-label">
-      <div class="screen-num">٥</div>
-      <div>
-        <div class="screen-name">مراجعة الإجابات</div>
-        <div class="screen-url">localhost:8000/review</div>
-      </div>
-    </div>
-    <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000/review</div>
-      </div>
-      <div class="mockup-body">
-        <div class="m-score-card">
-          <div class="m-score-circle"><div class="m-score-num">85</div></div>
-          <div class="m-score-label"></div>
-          <div style="display:inline-block;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:100px;padding:4px 16px;margin-top:8px;">
-            <div style="height:8px;background:rgba(252,211,77,0.5);border-radius:4px;width:50px;"></div>
-          </div>
-        </div>
-        <div class="m-issue-card">
-          <div class="m-issue-row">
-            <div class="m-severity"></div>
-            <div style="height:16px;background:rgba(255,255,255,0.08);border-radius:100px;width:50px;"></div>
-          </div>
-          <div class="m-issue-text"></div>
-          <div class="m-issue-sub"></div>
-        </div>
-        <div class="m-issue-card warn">
-          <div class="m-issue-row">
-            <div class="m-severity warn"></div>
-            <div style="height:16px;background:rgba(255,255,255,0.08);border-radius:100px;width:50px;"></div>
-          </div>
-          <div class="m-issue-text"></div>
-          <div class="m-issue-sub"></div>
-        </div>
-        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;">
-          <div class="m-btn m-btn-p" style="height:32px;"><div class="m-btn-label" style="width:55px;"></div></div>
-          <div class="m-btn m-btn-o" style="height:32px;"><div class="m-btn-label" style="width:55px;"></div></div>
-        </div>
-      </div>
-      <div class="m-footer"><div class="m-footer-text"></div></div>
-    </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>بطاقة النتيجة: دائرة درجة الثقة (0–100) + مستوى الجودة الملوّن</li>
-        <li>قائمة المشكلات المكتشفة: كل مشكلة مع درجة خطورتها، تفسيرها، والإجراء المقترح</li>
-        <li>إمكانية تعديل الإجابات المُشار إليها مباشرةً من هذه الشاشة</li>
-        <li>زر "تأكيد الإرسال" وزر "تعديل الإجابات" مع مؤشر التحميل عند الإرسال</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Screen 6: Dashboard -->
-  <div class="screen-section">
-    <div class="screen-label">
-      <div class="screen-num">٦</div>
-      <div>
-        <div class="screen-name">لوحة التحكم</div>
-        <div class="screen-url">localhost:8000/dashboard</div>
-      </div>
-    </div>
-    <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000/dashboard</div>
-      </div>
-      <div class="mockup-body">
-        <div class="m-navbar">
-          <div class="m-logo-bar"></div>
-          <div class="m-nav-links">
-            <div class="m-nav-link"></div><div class="m-nav-link"></div>
-            <div class="m-nav-link"></div><div class="m-nav-link active"></div>
-          </div>
-        </div>
-        <div class="m-stat-grid">
-          <div class="m-stat"><div class="m-stat-val"></div><div class="m-stat-lbl"></div></div>
-          <div class="m-stat"><div class="m-stat-val" style="background:rgba(52,211,153,0.3);"></div><div class="m-stat-lbl"></div></div>
-          <div class="m-stat"><div class="m-stat-val" style="background:rgba(252,211,77,0.3);"></div><div class="m-stat-lbl"></div></div>
-          <div class="m-stat"><div class="m-stat-val" style="background:rgba(252,165,165,0.3);"></div><div class="m-stat-lbl"></div></div>
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000/how-it-works</div></div>
+      <div class="mbody">
+        <div class="mnav">
+          <div class="mnav-brand"><div class="mnav-logo">TL</div><span class="mnav-name">TrustLayer AI</span></div>
+          <div class="mnav-links"><span class="mnav-link">الرئيسية</span><span class="mnav-link act">كيف يعمل؟</span><span class="mnav-link">استخدم النظام</span><span class="mnav-link">لوحة التحكم</span></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;">
-            <div style="height:8px;background:rgba(255,255,255,0.15);border-radius:4px;width:50%;margin-bottom:10px;"></div>
-            <div style="height:6px;background:rgba(167,139,250,0.3);border-radius:3px;margin-bottom:5px;"></div>
-            <div style="height:6px;background:rgba(52,211,153,0.3);border-radius:3px;margin-bottom:5px;width:70%;"></div>
-            <div style="height:6px;background:rgba(252,165,165,0.3);border-radius:3px;width:45%;"></div>
+          <div class="msteps">
+            <div class="mstep"><div class="mstep-n">١</div><div class="mstep-body"><div class="mstep-t"></div><div class="mstep-s"></div></div></div>
+            <div class="mstep"><div class="mstep-n">٢</div><div class="mstep-body"><div class="mstep-t"></div><div class="mstep-s"></div></div></div>
+            <div class="mstep"><div class="mstep-n">٣</div><div class="mstep-body"><div class="mstep-t"></div><div class="mstep-s"></div></div></div>
+            <div class="mstep"><div class="mstep-n">٤</div><div class="mstep-body"><div class="mstep-t"></div><div class="mstep-s"></div></div></div>
           </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;">
-            <div style="height:8px;background:rgba(255,255,255,0.15);border-radius:4px;width:60%;margin-bottom:10px;"></div>
-            <div style="height:6px;background:rgba(6,182,212,0.3);border-radius:3px;margin-bottom:5px;"></div>
-            <div style="height:6px;background:rgba(167,139,250,0.3);border-radius:3px;margin-bottom:5px;width:80%;"></div>
-            <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;width:55%;"></div>
+          <div>
+            <div style="background:white;border:1px solid var(--border);border-radius:6px;padding:8px;font-size:.62rem;">
+              <div style="font-weight:700;color:var(--p);margin-bottom:6px;">قواعد التحقق</div>
+              <div style="display:flex;flex-direction:column;gap:3px;">
+                <div style="display:flex;gap:6px;align-items:center;"><span class="rchip" style="font-size:.58rem;">R-01</span><span style="color:var(--tl);font-size:.6rem;">الدخل vs الفخامة</span><span style="color:var(--er);font-weight:700;font-size:.6rem;margin-right:auto;">−30</span></div>
+                <div style="display:flex;gap:6px;align-items:center;"><span class="rchip" style="font-size:.58rem;">R-02</span><span style="color:var(--tl);font-size:.6rem;">الإنترنت vs التطبيقات</span><span style="color:var(--wa);font-weight:700;font-size:.6rem;margin-right:auto;">−15</span></div>
+                <div style="display:flex;gap:6px;align-items:center;"><span class="rchip" style="font-size:.58rem;">R-03</span><span style="color:var(--tl);font-size:.6rem;">التلفاز vs القنوات</span><span style="color:var(--wa);font-weight:700;font-size:.6rem;margin-right:auto;">−15</span></div>
+                <div style="display:flex;gap:6px;align-items:center;"><span class="rchip" style="font-size:.58rem;">R-04</span><span style="color:var(--tl);font-size:.6rem;">الشراء vs الإنفاق</span><span style="color:var(--wa);font-weight:700;font-size:.6rem;margin-right:auto;">−15</span></div>
+                <div style="display:flex;gap:6px;align-items:center;"><span class="rchip" style="font-size:.58rem;">AI</span><span style="color:var(--tl);font-size:.6rem;">تحليل دلالي</span><span style="color:var(--wa);font-weight:700;font-size:.6rem;margin-right:auto;">−15</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flow" style="margin:8px 0 0;">
+          <div class="fn" style="font-size:.6rem;padding:4px 8px;">الاستبيان</div><div class="fa" style="font-size:.8rem;">←</div>
+          <div class="fn" style="font-size:.6rem;padding:4px 8px;">القواعد</div><div class="fa" style="font-size:.8rem;">←</div>
+          <div class="fn" style="font-size:.6rem;padding:4px 8px;">Claude AI</div><div class="fa" style="font-size:.8rem;">←</div>
+          <div class="fn" style="font-size:.6rem;padding:4px 8px;">درجة الثقة</div><div class="fa" style="font-size:.8rem;">←</div>
+          <div class="fn" style="font-size:.6rem;padding:4px 8px;">قاعدة البيانات</div>
+        </div>
+      </div>
+    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>شرح مرحلي لآلية عمل النظام عبر 6 خطوات مرقمة</li>
+      <li>مخطط تدفق البيانات من الإدخال حتى التخزين</li>
+      <li>جدول القواعد الست مع معامل الخصم لكل منها</li>
+      <li>توضيح دور Claude AI في التحليل الدلالي</li>
+    </ul></div>
+  </div>
+
+  <div class="pg-num">4</div>
+  <div class="pg-foot">TrustLayer AI — نموذج أولي</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  PAGE 5: SCREENS 3 & 4
+══════════════════════════════════════════════════ -->
+<div class="pg">
+  <div class="pg-head">
+    <div class="pg-chip">الشاشات — ٢ من ٤</div>
+    <div class="pg-title">استخدم النظام · الاستبيان</div>
+  </div>
+
+  <!-- Screen 3 -->
+  <div class="screen-wrap">
+    <div class="screen-label">
+      <div class="screen-num">٣</div>
+      <div><div class="screen-name">استخدم النظام</div><div class="screen-url">localhost:8000/use-system</div></div>
+    </div>
+    <div class="mockup">
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000/use-system</div></div>
+      <div class="mbody">
+        <div class="mnav">
+          <div class="mnav-brand"><div class="mnav-logo">TL</div><span class="mnav-name">TrustLayer AI</span></div>
+          <div class="mnav-links"><span class="mnav-link">الرئيسية</span><span class="mnav-link">كيف يعمل؟</span><span class="mnav-link act">استخدم النظام</span><span class="mnav-link">لوحة التحكم</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div class="msteps">
+            <div style="font-size:.65rem;font-weight:700;color:var(--p);margin-bottom:8px;">خطوات الاستخدام</div>
+            <div class="mstep"><div class="mstep-n">١</div><div class="mstep-body"><div class="mstep-t" style="width:65%;"></div><div class="mstep-s"></div></div></div>
+            <div class="mstep"><div class="mstep-n">٢</div><div class="mstep-body"><div class="mstep-t" style="width:55%;"></div><div class="mstep-s"></div></div></div>
+            <div class="mstep"><div class="mstep-n">٣</div><div class="mstep-body"><div class="mstep-t" style="width:70%;"></div><div class="mstep-s"></div></div></div>
+            <div class="mstep"><div class="mstep-n">٤</div><div class="mstep-body"><div class="mstep-t" style="width:60%;"></div><div class="mstep-s"></div></div></div>
+            <div class="mstep"><div class="mstep-n">٥</div><div class="mstep-body"><div class="mstep-t" style="width:50%;"></div><div class="mstep-s"></div></div></div>
+          </div>
+          <div>
+            <div style="font-size:.65rem;font-weight:700;color:var(--p);margin-bottom:8px;">ماذا يحدث عند تناقض؟</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px;display:flex;gap:6px;align-items:flex-start;"><div style="font-size:.75rem;margin-top:1px;">⚠️</div><div><div class="mstep-t" style="width:70%;margin-bottom:3px;"></div><div class="mstep-s"></div></div></div>
+              <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px;display:flex;gap:6px;align-items:flex-start;"><div style="font-size:.75rem;margin-top:1px;">✏️</div><div><div class="mstep-t" style="width:55%;margin-bottom:3px;"></div><div class="mstep-s"></div></div></div>
+              <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px;display:flex;gap:6px;align-items:flex-start;"><div style="font-size:.75rem;margin-top:1px;">📤</div><div><div class="mstep-t" style="width:65%;margin-bottom:3px;"></div><div class="mstep-s"></div></div></div>
+            </div>
+            <div style="background:linear-gradient(135deg,var(--p),var(--pd));border-radius:6px;padding:8px;text-align:center;margin-top:8px;">
+              <div style="font-size:.62rem;color:white;font-weight:700;margin-bottom:4px;">جاهز للبدء؟</div>
+              <div class="mbtn mbtn-w" style="display:inline-block;font-size:.58rem;">ابدأ الاستبيان ←</div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="m-footer"><div class="m-footer-text"></div></div>
     </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>بطاقات إحصائية: إجمالي الاستجابات، متوسط درجة الثقة، عدد المُعلَّمة</li>
-        <li>توزيع مستويات الجودة: عالية / متوسطة / منخفضة</li>
-        <li>مقاييس الأداء: الدقة 92.4%، الاستدعاء 90.1%، معدل التصحيح</li>
-        <li>البيانات تُحمَّل لحظياً من قاعدة البيانات عبر API</li>
-      </ul>
-    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>دليل استخدام خطوة بخطوة (5 خطوات) مع أرقام بارزة</li>
+      <li>شرح ما يحدث عند اكتشاف تناقض: رسالة تفسيرية + خيار التصحيح + إرسال بقرارك</li>
+      <li>تنبيه عن أثر وقت الاستجابة (أقل من 15 ثانية يُشغّل R-06)</li>
+      <li>زر CTA مباشر للانتقال للاستبيان في أسفل الصفحة</li>
+    </ul></div>
   </div>
+
+  <!-- Screen 4 -->
+  <div class="screen-wrap">
+    <div class="screen-label">
+      <div class="screen-num">٤</div>
+      <div><div class="screen-name">الاستبيان</div><div class="screen-url">localhost:8000/survey</div></div>
+    </div>
+    <div class="mockup">
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000/survey</div></div>
+      <div class="mbody">
+        <div style="text-align:center;margin-bottom:8px;"><div style="font-size:.65rem;font-weight:700;color:var(--p);">استبيان العادات الاستهلاكية</div><div style="font-size:.8rem;font-weight:800;color:var(--td);margin-bottom:2px;">الاستبيان</div><div style="font-size:.6rem;color:var(--tl);">يرجى الإجابة عن جميع الأسئلة بدقة</div></div>
+        <div class="mtimer"><span class="mtimer-lbl">⏱ وقت الاستجابة</span><span class="mtimer-val">02:34</span></div>
+        <div class="mprog"><div class="mprog-track"><div class="mprog-fill" style="width:64%;"></div></div><span class="mprog-txt">7 / 11</span></div>
+        <div class="mq">
+          <div class="mq-lbl">السؤال الأول — الدخل الشهري</div>
+          <div class="mq-text"></div>
+          <div class="mopts">
+            <div class="mopt"><div class="mopt-dot"></div><div class="mopt-l"></div></div>
+            <div class="mopt sel"><div class="mopt-dot"></div><div class="mopt-l"></div></div>
+            <div class="mopt"><div class="mopt-dot"></div><div class="mopt-l"></div></div>
+            <div class="mopt"><div class="mopt-dot"></div><div class="mopt-l"></div></div>
+          </div>
+        </div>
+        <div class="mq">
+          <div class="mq-lbl">السؤال الثاني — المشتريات الفاخرة</div>
+          <div class="mq-text"></div>
+          <div class="mopts">
+            <div class="mopt"><div class="mopt-dot"></div><div class="mopt-l"></div></div>
+            <div class="mopt"><div class="mopt-dot"></div><div class="mopt-l"></div></div>
+            <div class="mopt sel"><div class="mopt-dot"></div><div class="mopt-l"></div></div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:8px;"><div class="mbtn mbtn-w" style="background:var(--p);color:white;display:inline-block;font-size:.65rem;padding:5px 16px;border-radius:7px;">مراجعة الإجابات ←</div></div>
+      </div>
+    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>11 سؤالاً بتصميم بطاقات واضح مع خيارات راديو تفاعلية ملوّنة عند الاختيار</li>
+      <li>موقت مدمج يُسجّل وقت الاستجابة تلقائياً (يُستخدم في قاعدة R-06)</li>
+      <li>شريط تقدم يُظهر عدد الأسئلة المُجاب عنها</li>
+      <li>رسالة خطأ عند الإرسال قبل إكمال الأسئلة + مؤشر تحميل عند الإرسال</li>
+    </ul></div>
+  </div>
+
+  <div class="pg-num">5</div>
+  <div class="pg-foot">TrustLayer AI — نموذج أولي</div>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE 6: SCREENS 7–8                                          -->
-<!-- ============================================================ -->
-<div class="proto-page">
-  <div class="sec-header">
-    <div class="sec-chip">واجهات النظام</div>
-    <h2 class="sec-title">الشاشات — ٤ من ٤</h2>
+<!-- ══════════════════════════════════════════════════
+  PAGE 6: SCREENS 5 & 6
+══════════════════════════════════════════════════ -->
+<div class="pg">
+  <div class="pg-head">
+    <div class="pg-chip">الشاشات — ٣ من ٤</div>
+    <div class="pg-title">مراجعة الإجابات · لوحة التحكم</div>
   </div>
 
-  <!-- Screen 7: Success -->
-  <div class="screen-section">
+  <!-- Screen 5 -->
+  <div class="screen-wrap">
+    <div class="screen-label">
+      <div class="screen-num">٥</div>
+      <div><div class="screen-name">مراجعة الإجابات</div><div class="screen-url">localhost:8000/review</div></div>
+    </div>
+    <div class="mockup">
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000/review</div></div>
+      <div class="mbody">
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;">
+          <div>
+            <div class="mscore-card" style="width:120px;">
+              <div class="mscore-c mscore-med">85</div>
+              <div class="mscore-lbl">درجة الثقة</div>
+              <div class="mscore-badge mb-wa">جودة متوسطة</div>
+            </div>
+          </div>
+          <div>
+            <div class="missue">
+              <div class="missue-top"><span class="missue-sev ms-hi">خطورة عالية</span><span class="missue-ded">−30 نقطة</span></div>
+              <div style="font-size:.62rem;font-weight:700;color:var(--td);margin-bottom:3px;">تعارض بين الدخل المنخفض والإنفاق على المنتجات الفاخرة</div>
+              <div class="missue-exp"></div>
+              <div class="missue-act"></div>
+            </div>
+            <div class="missue med">
+              <div class="missue-top"><span class="missue-sev ms-me">خطورة متوسطة</span><span class="missue-ded" style="color:var(--wa);">−15 نقطة</span></div>
+              <div style="font-size:.62rem;font-weight:700;color:var(--td);margin-bottom:3px;">تعارض بين عدم مشاهدة التلفاز وذكر قنوات مفضلة</div>
+              <div class="missue-exp"></div>
+              <div class="missue-act"></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px;margin-top:8px;">
+          <div style="font-size:.65rem;font-weight:700;color:var(--td);margin-bottom:7px;">ماذا تريد أن تفعل؟</div>
+          <div style="display:flex;gap:6px;">
+            <div class="mbtn" style="background:var(--p);color:white;font-size:.6rem;padding:4px 12px;border-radius:6px;">✓ تأكيد الإرسال</div>
+            <div class="mbtn" style="background:white;border:1px solid var(--border);font-size:.6rem;padding:4px 12px;border-radius:6px;">✏ تعديل الإجابات</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>بطاقة درجة الثقة: دائرة النتيجة (0–100) ملوّنة حسب المستوى + شارة الجودة</li>
+      <li>قائمة المشكلات: كل مشكلة مع درجة خطورتها، الخصم، التفسير العربي، والإجراء المقترح</li>
+      <li>إمكانية تعديل الإجابات والعودة للاستبيان مباشرةً من هذه الشاشة</li>
+      <li>زر "تأكيد الإرسال" + مؤشر تحميل عند الإرسال النهائي</li>
+    </ul></div>
+  </div>
+
+  <!-- Screen 6 -->
+  <div class="screen-wrap">
+    <div class="screen-label">
+      <div class="screen-num">٦</div>
+      <div><div class="screen-name">لوحة التحكم</div><div class="screen-url">localhost:8000/dashboard</div></div>
+    </div>
+    <div class="mockup">
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000/dashboard</div></div>
+      <div class="mbody">
+        <div class="mnav">
+          <div class="mnav-brand"><div class="mnav-logo">TL</div><span class="mnav-name">TrustLayer AI</span></div>
+          <div class="mnav-links"><span class="mnav-link">الرئيسية</span><span class="mnav-link">كيف يعمل؟</span><span class="mnav-link">استخدم النظام</span><span class="mnav-link act">لوحة التحكم</span></div>
+        </div>
+        <div class="mdbg">
+          <div class="mdbstat"><div class="mdbval" style="color:var(--p);">147</div><div class="mdblbl"></div></div>
+          <div class="mdbstat"><div class="mdbval" style="color:var(--wa);">78.4</div><div class="mdblbl"></div></div>
+          <div class="mdbstat"><div class="mdbval" style="color:var(--ok);">34.2%</div><div class="mdblbl"></div></div>
+          <div class="mdbstat"><div class="mdbval" style="color:var(--er);">41</div><div class="mdblbl"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="mbars">
+            <div style="font-size:.62rem;font-weight:700;color:var(--td);margin-bottom:7px;">توزيع الجودة</div>
+            <div class="mbar-row"><div class="mbar-lbl">عالية (90–100)</div><div class="mbar-track"><div class="mbar-fill" style="width:54%;background:var(--ok);"></div></div><div class="mbar-cnt">79</div></div>
+            <div class="mbar-row"><div class="mbar-lbl">متوسطة (70–89)</div><div class="mbar-track"><div class="mbar-fill" style="width:27%;background:var(--wa);"></div></div><div class="mbar-cnt">39</div></div>
+            <div class="mbar-row"><div class="mbar-lbl">منخفضة (&lt;70)</div><div class="mbar-track"><div class="mbar-fill" style="width:19%;background:var(--er);"></div></div><div class="mbar-cnt">29</div></div>
+          </div>
+          <div class="mbars">
+            <div style="font-size:.62rem;font-weight:700;color:var(--td);margin-bottom:7px;">أكثر القواعد تفعيلاً</div>
+            <div class="mbar-row"><div class="mbar-lbl">R-01: الدخل vs فخامة</div><div class="mbar-track"><div class="mbar-fill" style="width:75%;background:var(--er);"></div></div><div class="mbar-cnt">45</div></div>
+            <div class="mbar-row"><div class="mbar-lbl">R-05: العلامة المفضلة</div><div class="mbar-track"><div class="mbar-fill" style="width:50%;background:var(--wa);"></div></div><div class="mbar-cnt">30</div></div>
+            <div class="mbar-row"><div class="mbar-lbl">AI: تحليل دلالي</div><div class="mbar-track"><div class="mbar-fill" style="width:27%;background:var(--p);"></div></div><div class="mbar-cnt">16</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>4 بطاقات KPI: إجمالي الاستجابات — متوسط درجة الثقة — معدل التصحيح — المُعلَّمة</li>
+      <li>مخطط شريطي: توزيع مستويات الجودة (عالية / متوسطة / منخفضة)</li>
+      <li>مخطط أكثر القواعد تفعيلاً مع عدد مرات التشغيل لكل قاعدة</li>
+      <li>البيانات تُحمَّل من قاعدة البيانات عبر API — لوحة قراءة فقط (لا صلاحيات إدارة)</li>
+    </ul></div>
+  </div>
+
+  <div class="pg-num">6</div>
+  <div class="pg-foot">TrustLayer AI — نموذج أولي</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  PAGE 7: SCREENS 7 & 8
+══════════════════════════════════════════════════ -->
+<div class="pg">
+  <div class="pg-head">
+    <div class="pg-chip">الشاشات — ٤ من ٤</div>
+    <div class="pg-title">صفحة النجاح · صفحة الخطأ</div>
+  </div>
+
+  <!-- Screen 7 -->
+  <div class="screen-wrap">
     <div class="screen-label">
       <div class="screen-num">٧</div>
-      <div>
-        <div class="screen-name">تم الإرسال بنجاح</div>
-        <div class="screen-url">localhost:8000/success</div>
-      </div>
+      <div><div class="screen-name">تم الإرسال بنجاح</div><div class="screen-url">localhost:8000/success</div></div>
     </div>
     <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000/success</div>
-      </div>
-      <div class="mockup-body" style="display:flex;align-items:center;justify-content:center;">
-        <div style="max-width:360px;width:100%;">
-          <div class="m-success-box">
-            <div class="m-success-icon">✓</div>
-            <div class="m-success-title"></div>
-            <div class="m-success-sub"></div>
-            <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:14px;">
-              <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);">
-                <div style="height:7px;width:35%;background:rgba(255,255,255,0.1);border-radius:3px;"></div>
-                <div style="height:7px;width:40%;background:rgba(52,211,153,0.3);border-radius:3px;"></div>
-              </div>
-              <div style="display:flex;justify-content:space-between;padding:5px 0;">
-                <div style="height:7px;width:30%;background:rgba(255,255,255,0.1);border-radius:3px;"></div>
-                <div style="height:7px;width:20%;background:rgba(167,139,250,0.4);border-radius:3px;"></div>
-              </div>
-            </div>
-            <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
-              <div class="m-btn m-btn-p" style="height:30px;"><div class="m-btn-label" style="width:50px;"></div></div>
-              <div class="m-btn m-btn-o" style="height:30px;"><div class="m-btn-label" style="width:50px;"></div></div>
-            </div>
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000/success</div></div>
+      <div class="mbody" style="display:flex;align-items:center;justify-content:center;min-height:140px;">
+        <div class="mres">
+          <div class="mres-icon mres-ok">✓</div>
+          <div style="font-size:.7rem;font-weight:800;color:var(--ok);margin-bottom:4px;">تم الإرسال بنجاح!</div>
+          <div class="mres-s"></div>
+          <div class="mres-rows">
+            <div class="mres-row"><div class="mrk"></div><div class="mrv mrv-p"></div></div>
+            <div class="mres-row"><div class="mrk"></div><div class="mrv mrv-ok"></div></div>
+            <div class="mres-row"><div class="mrk"></div><div class="mrv mrv-p"></div></div>
+            <div class="mres-row"><div class="mrk"></div><div class="mrv mrv-ok" style="width:50%;"></div></div>
+          </div>
+          <div class="mres-btns">
+            <div class="mres-btn mres-btn-p">استبيان جديد</div>
+            <div class="mres-btn mres-btn-s">لوحة التحكم</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>أيقونة نجاح خضراء مع تأثير توهج بصري</li>
-        <li>ملخص النتيجة: رقم الاستجابة، درجة الثقة، مستوى الجودة</li>
-        <li>خياران: إجراء استبيان جديد أو عرض لوحة التحكم</li>
-      </ul>
-    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>أيقونة نجاح خضراء (✓) مع حدود ملوّنة</li>
+      <li>ملخص النتيجة: رقم الاستجابة — درجة الثقة — مستوى الجودة — حالة التحقق</li>
+      <li>خياران: "إجراء استبيان جديد" أو "عرض لوحة التحكم"</li>
+      <li>لا توجد قائمة تنقل في هذه الصفحة (صفحة نهاية المسار)</li>
+    </ul></div>
   </div>
 
-  <!-- Screen 8: Error -->
-  <div class="screen-section">
+  <!-- Screen 8 -->
+  <div class="screen-wrap">
     <div class="screen-label">
       <div class="screen-num">٨</div>
-      <div>
-        <div class="screen-name">صفحة الخطأ</div>
-        <div class="screen-url">localhost:8000/error</div>
-      </div>
+      <div><div class="screen-name">صفحة الخطأ</div><div class="screen-url">localhost:8000/error</div></div>
     </div>
     <div class="mockup">
-      <div class="mockup-bar">
-        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <div class="mockup-url">localhost:8000/error</div>
-      </div>
-      <div class="mockup-body" style="display:flex;align-items:center;justify-content:center;">
-        <div style="max-width:360px;width:100%;">
-          <div class="m-error-box">
-            <div class="m-error-icon">✕</div>
-            <div class="m-error-title"></div>
-            <div class="m-error-sub"></div>
-            <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;">
-              <div class="m-btn m-btn-p" style="height:30px;"><div class="m-btn-label" style="width:55px;"></div></div>
-              <div class="m-btn m-btn-o" style="height:30px;"><div class="m-btn-label" style="width:55px;"></div></div>
-            </div>
+      <div class="mbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><div class="murl">localhost:8000/error</div></div>
+      <div class="mbody" style="display:flex;align-items:center;justify-content:center;min-height:140px;">
+        <div class="mres">
+          <div class="mres-icon mres-er">✕</div>
+          <div style="font-size:.7rem;font-weight:800;color:var(--er);margin-bottom:4px;">حدث خطأ</div>
+          <div class="mres-t" style="margin-bottom:4px;"></div>
+          <div class="mres-s"></div>
+          <div class="mres-btns" style="margin-top:12px;">
+            <div class="mres-btn mres-btn-p">إعادة المحاولة</div>
+            <div class="mres-btn mres-btn-s">الرئيسية</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="screen-desc">
-      <h4>وصف الشاشة</h4>
-      <ul>
-        <li>تظهر عند فشل الاتصال بالخادم أو حدوث خطأ غير متوقع</li>
-        <li>أيقونة خطأ حمراء مع رسالة توضيحية</li>
-        <li>زر إعادة المحاولة وزر العودة للصفحة الرئيسية</li>
-      </ul>
-    </div>
+    <div class="sdesc"><h5>محتوى الشاشة</h5><ul>
+      <li>تظهر عند فشل الاتصال بالخادم أو حدوث خطأ غير متوقع</li>
+      <li>أيقونة خطأ حمراء (✕) مع رسالة توضيحية عن سبب المشكلة</li>
+      <li>زران: "إعادة المحاولة" يعيد المستخدم للاستبيان، "الرئيسية" يعيده للصفحة الرئيسية</li>
+      <li>لا توجد قائمة تنقل في هذه الصفحة (صفحة استثنائية)</li>
+    </ul></div>
   </div>
+
+  <div class="pg-num">7</div>
+  <div class="pg-foot">TrustLayer AI — نموذج أولي</div>
 </div>
 
-<!-- ============================================================ -->
-<!-- PAGE 7: USER JOURNEY                                          -->
-<!-- ============================================================ -->
-<div class="proto-page">
-  <div class="sec-header">
-    <div class="sec-chip">رحلة المستخدم</div>
-    <h2 class="sec-title">User Journey</h2>
-    <p class="sec-desc">المسار الكامل الذي يسلكه المستخدم من لحظة دخوله للنظام حتى حفظ بياناته بنجاح.</p>
+<!-- ══════════════════════════════════════════════════
+  PAGE 8: USER JOURNEY
+══════════════════════════════════════════════════ -->
+<div class="pg">
+  <div class="pg-head">
+    <div class="pg-chip">رحلة المستخدم</div>
+    <div class="pg-title">User Journey — المسار الكامل</div>
+    <div class="pg-desc">المسار الذي يسلكه المستخدم من دخول النظام حتى حفظ بياناته بنجاح.</div>
   </div>
 
-  <div class="journey-flow">
-    <div class="journey-step">
-      <div class="journey-content">
-        <div class="journey-tag">الخطوة ١</div>
-        <div class="journey-title">الوصول إلى النظام</div>
-        <div class="journey-body">يفتح المستخدم الصفحة الرئيسية ويتعرف على النظام عبر قسم Hero والمزايا المعروضة، ثم ينتقل لصفحة "كيف يعمل النظام؟" للاطلاع على آلية العمل.</div>
-      </div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-content">
-        <div class="journey-tag">الخطوة ٢</div>
-        <div class="journey-title">بدء الاستبيان</div>
-        <div class="journey-body">ينقر المستخدم على "ابدأ الاستبيان" وتبدأ مرحلة الإجابة على 11 سؤالاً. يُسجَّل وقت الاستجابة تلقائياً من لحظة تحميل الصفحة.</div>
-      </div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-content">
-        <div class="journey-tag">الخطوة ٣</div>
-        <div class="journey-title">إرسال الإجابات للتحقق</div>
-        <div class="journey-body">عند الضغط على "التالي"، يُرسَل طلب POST إلى <code style="color:#A78BFA;background:rgba(124,58,237,0.1);padding:2px 6px;border-radius:4px;">/validate-response</code> ويظهر مؤشر التحميل. يُشغِّل النظام القواعد الست ثم يستدعي الذكاء الاصطناعي.</div>
-      </div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-content">
-        <div class="journey-tag" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:#FCD34D;">تفرع — وُجدت مشكلات</div>
-        <div class="journey-title">مراجعة المشكلات وتصحيحها</div>
-        <div class="journey-body">تُعرض صفحة المراجعة مع درجة الثقة وقائمة المشكلات. لكل مشكلة: الخطورة، التفسير، والإجراء المقترح. يستطيع المستخدم تعديل الإجابات المُشار إليها مباشرةً.</div>
-      </div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-content">
-        <div class="journey-tag" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:#34D399;">تفرع — لا توجد مشكلات</div>
-        <div class="journey-title">الانتقال المباشر للتأكيد</div>
-        <div class="journey-body">إذا لم تكتشف القواعد ولا الذكاء الاصطناعي أي تناقض (درجة الثقة = 100)، تُعرض نتيجة نظيفة مع إمكانية التأكيد الفوري.</div>
-      </div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-content">
-        <div class="journey-tag">الخطوة ٤</div>
-        <div class="journey-title">الإرسال النهائي والحفظ</div>
-        <div class="journey-body">ينقر المستخدم "تأكيد الإرسال". يُرسَل طلب POST إلى <code style="color:#A78BFA;background:rgba(124,58,237,0.1);padding:2px 6px;border-radius:4px;">/submit-response</code> مع الإجابات والمشكلات وإجراءات التصحيح، وتُحفظ جميعها في قاعدة البيانات.</div>
-      </div>
-    </div>
-    <div class="journey-step">
-      <div class="journey-content">
-        <div class="journey-tag">الخطوة ٥</div>
-        <div class="journey-title">تأكيد النجاح</div>
-        <div class="journey-body">تظهر صفحة النجاح مع ملخص: رقم الاستجابة، الدرجة النهائية، مستوى الجودة. يستطيع المستخدم إجراء استبيان جديد أو مراجعة لوحة التحكم.</div>
-      </div>
+  <div class="journey">
+    <div class="jstep"><div class="jcontent"><div class="jtag">الخطوة ١</div><div class="jt">الوصول إلى النظام</div><div class="jb">يفتح المستخدم الصفحة الرئيسية، يتعرف على النظام عبر قسم Hero والمزايا، ثم ينتقل لـ"كيف يعمل؟" للاطلاع على آلية العمل.</div></div></div>
+    <div class="jstep"><div class="jcontent"><div class="jtag">الخطوة ٢</div><div class="jt">بدء الاستبيان</div><div class="jb">ينقر "ابدأ الاستبيان"، تبدأ مرحلة الإجابة على 11 سؤالاً. يُسجَّل وقت الاستجابة تلقائياً من لحظة تحميل الصفحة.</div></div></div>
+    <div class="jstep"><div class="jcontent"><div class="jtag">الخطوة ٣</div><div class="jt">إرسال الإجابات للتحقق</div><div class="jb">عند الضغط على "مراجعة الإجابات"، يُرسَل طلب POST إلى <code style="background:var(--pl);color:var(--p);padding:1px 5px;border-radius:3px;font-size:.72rem;">/validate-response</code> ويظهر مؤشر التحميل بينما يُشغّل النظام القواعد الست والذكاء الاصطناعي.</div></div></div>
+    <div class="jstep"><div class="jcontent"><div class="jtag" style="background:var(--wal);color:var(--wa);">تفرع — وُجدت مشكلات</div><div class="jt">مراجعة المشكلات وتصحيحها</div><div class="jb">تُعرض صفحة المراجعة مع درجة الثقة وقائمة المشكلات. لكل مشكلة: الخطورة، الخصم، التفسير، والإجراء المقترح. يستطيع المستخدم تعديل الإجابات والعودة للتحقق مجدداً.</div></div></div>
+    <div class="jstep"><div class="jcontent"><div class="jtag" style="background:var(--okl);color:var(--ok);">تفرع — لا توجد مشكلات</div><div class="jt">الانتقال المباشر للتأكيد</div><div class="jb">إذا لم يكتشف النظام أي تناقض (درجة الثقة = 100)، تُعرض رسالة "لا توجد مشكلات" مع إمكانية التأكيد الفوري.</div></div></div>
+    <div class="jstep"><div class="jcontent"><div class="jtag">الخطوة ٤</div><div class="jt">الإرسال النهائي والحفظ</div><div class="jb">ينقر "تأكيد الإرسال". يُرسَل طلب POST إلى <code style="background:var(--pl);color:var(--p);padding:1px 5px;border-radius:3px;font-size:.72rem;">/submit-response</code> مع الإجابات والمشكلات وإجراءات التصحيح، وتُحفظ في الجداول الثلاثة.</div></div></div>
+    <div class="jstep"><div class="jcontent"><div class="jtag">الخطوة ٥</div><div class="jt">صفحة نجاح الإرسال</div><div class="jb">تظهر صفحة النجاح مع ملخص: رقم الاستجابة، الدرجة النهائية، مستوى الجودة، حالة التحقق. يمكن إجراء استبيان جديد أو مراجعة لوحة التحكم.</div></div></div>
+  </div>
+
+  <div style="margin-top:24px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;">
+    <div style="font-size:.78rem;font-weight:700;color:var(--p);margin-bottom:12px;">📋 ملخص نقاط تفاعل المستخدم مع النظام</div>
+    <div class="g3">
+      <div style="font-size:.75rem;color:var(--tm);line-height:1.8;"><b style="color:var(--td);">صفحات التنقل (١–٤):</b><br/>• الرئيسية<br/>• كيف يعمل؟<br/>• استخدم النظام<br/>• لوحة التحكم</div>
+      <div style="font-size:.75rem;color:var(--tm);line-height:1.8;"><b style="color:var(--td);">صفحات مسار الاستبيان (٤–٧):</b><br/>• الاستبيان<br/>• مراجعة الإجابات<br/>• (تعديل اختياري)<br/>• نجاح الإرسال</div>
+      <div style="font-size:.75rem;color:var(--tm);line-height:1.8;"><b style="color:var(--td);">نقاط API:</b><br/>• POST /validate-response<br/>• POST /submit-response<br/>• GET /api/questions<br/>• GET /api/dashboard-stats</div>
     </div>
   </div>
 
-  <!-- Summary table -->
-  <div style="margin-top:48px;">
-    <div class="sec-chip" style="margin-bottom:20px;">ملخص المواصفات التقنية</div>
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="info-card-icon">🛠️</div>
-        <div class="info-card-title">التقنيات المستخدمة</div>
-        <div class="info-card-body">Python · FastAPI · SQLite · Anthropic Claude API · HTML/CSS/JS · Jinja2</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon">⚙️</div>
-        <div class="info-card-title">قواعد التحقق</div>
-        <div class="info-card-body">6 قواعد منطقية (R-01 إلى R-06) تغطي: التناقض الدلالي، الإنفاق غير المنطقي، الاستخدام التقني، وقت الاستجابة، وغيرها.</div>
-      </div>
-      <div class="info-card">
-        <div class="info-card-icon">🤖</div>
-        <div class="info-card-title">الذكاء الاصطناعي</div>
-        <div class="info-card-body">نموذج Claude Haiku يُحلّل الإجابات دلالياً ويكتشف التناقضات الخفية غير المشمولة بالقواعد المنطقية.</div>
-      </div>
-    </div>
-  </div>
+  <div class="pg-num">8</div>
+  <div class="pg-foot">TrustLayer AI — نموذج أولي</div>
 </div>
 
 </body>

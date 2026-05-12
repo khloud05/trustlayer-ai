@@ -11,6 +11,7 @@ from fastapi.templating import Jinja2Templates
 
 from confidence_score import calculate_score, get_quality_level
 from database import get_connection, init_db
+from data_cleaner import get_cleaning_stats
 from models import (
     CorrectionAction,
     SubmitRequest,
@@ -87,6 +88,21 @@ async def error_page(request: Request):
 @app.get("/prototype", response_class=HTMLResponse)
 async def prototype(request: Request):
     return templates.TemplateResponse(request=request, name="prototype.html")
+
+
+@app.get("/proto", response_class=HTMLResponse)
+async def interactive_prototype(request: Request):
+    return templates.TemplateResponse(request=request, name="interactive_prototype.html")
+
+
+@app.get("/prototype-print", response_class=HTMLResponse)
+async def prototype_print(request: Request):
+    return templates.TemplateResponse(request=request, name="prototype_print.html")
+
+
+@app.get("/pdf-report", response_class=HTMLResponse)
+async def pdf_report(request: Request):
+    return templates.TemplateResponse(request=request, name="pdf_report.html")
 
 
 # ---------------------------------------------------------------------------
@@ -354,6 +370,11 @@ async def dashboard_stats(days: int = 0, quality: str = ""):
         "overall_data_quality": overall_quality,
         "low_quality_pct": round((low_quality_count / total_responses * 100), 1) if total_responses > 0 else 0,
     }
+
+
+@app.get("/api/cleaning-stats")
+async def cleaning_stats():
+    return get_cleaning_stats()
 
 
 @app.get("/api/rules-frequency")

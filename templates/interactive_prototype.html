@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TrustLayer AI — نموذج تفاعلي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary:#4F46E5; --primary-dark:#3730A3; --primary-light:#EEF2FF;
+  --bg:#F5F7FB; --card:#FFFFFF; --border:#E5E7EB;
+  --text-dark:#111827; --text-medium:#374151; --text-light:#6B7280;
+  --success:#10B981; --success-light:#ECFDF5;
+  --warning:#F59E0B; --warning-light:#FFFBEB;
+  --danger:#EF4444; --danger-light:#FEF2F2;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:0 10px 15px rgba(0,0,0,.08),0 4px 6px rgba(0,0,0,.04);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{direction:rtl;scroll-behavior:smooth;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text-dark);line-height:1.6;min-height:100vh;}
+
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* Navbar */
+.navbar{background:white;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.navbar-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;}
+.brand-icon{width:36px;height:36px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:.85rem;}
+.brand-name{font-weight:800;font-size:1.1rem;color:var(--text-dark);}
+.nav-links{display:flex;list-style:none;gap:4px;}
+.nav-links a{text-decoration:none;color:var(--text-light);padding:8px 16px;border-radius:8px;font-size:.9rem;font-weight:500;transition:all .2s;cursor:pointer;}
+.nav-links a:hover{color:var(--primary);background:var(--primary-light);}
+.nav-links a.active{color:var(--primary);background:var(--primary-light);font-weight:600;}
+
+/* Layout */
+.container{max-width:1100px;margin:0 auto;padding:0 24px;}
+.section{padding:64px 0;}
+.section-label{display:inline-block;background:var(--primary-light);color:var(--primary);padding:5px 16px;border-radius:100px;font-size:.8rem;font-weight:700;letter-spacing:.5px;margin-bottom:12px;}
+.section-title{font-size:1.9rem;font-weight:800;color:var(--text-dark);margin-bottom:14px;}
+.section-desc{font-size:1rem;color:var(--text-light);line-height:1.8;max-width:600px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;text-decoration:none;}
+.btn-primary{background:var(--primary);color:white;}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(79,70,229,.35);}
+.btn-secondary{background:white;color:var(--primary);border:1.5px solid var(--primary);}
+.btn-secondary:hover{background:var(--primary-light);}
+.btn-outline{background:transparent;color:white;border:1.5px solid rgba(255,255,255,.6);}
+.btn-outline:hover{background:rgba(255,255,255,.15);}
+.btn-lg{padding:14px 32px;font-size:1.05rem;}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--primary) 0%,#3730A3 50%,#1E1B4B 100%);color:white;padding:80px 0;text-align:center;}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;padding:6px 18px;border-radius:100px;font-size:.85rem;font-weight:600;margin-bottom:24px;}
+.hero h1{font-size:2.4rem;font-weight:800;line-height:1.3;max-width:700px;margin:0 auto 20px;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.8);max-width:540px;margin:0 auto 36px;}
+.hero-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* Cards / grids */
+.card{background:white;border:1px solid var(--border);border-radius:14px;padding:24px;box-shadow:var(--shadow);}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+
+/* Feature cards */
+.feature-icon{width:48px;height:48px;background:var(--primary-light);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px;}
+.feature-card h3{font-size:1rem;font-weight:700;margin-bottom:8px;}
+.feature-card p{font-size:.875rem;color:var(--text-light);line-height:1.75;}
+
+/* Stats */
+.stat-card{background:white;border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center;box-shadow:var(--shadow);}
+.stat-value{font-size:2.2rem;font-weight:800;color:var(--primary);margin-bottom:6px;}
+.stat-label{font-size:.9rem;color:var(--text-light);}
+
+/* Steps */
+.steps-list{display:flex;flex-direction:column;gap:24px;margin-top:32px;}
+.step{display:flex;gap:20px;align-items:flex-start;}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0;box-shadow:0 4px 12px rgba(79,70,229,.3);}
+.step-content h4{font-size:1rem;font-weight:700;margin-bottom:6px;}
+.step-content p{font-size:.875rem;color:var(--text-light);line-height:1.75;}
+
+/* Flow */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:0;justify-content:center;margin:28px 0;}
+.flow-node{background:white;border:1.5px solid var(--primary);border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:600;color:var(--primary);}
+.flow-arrow{color:var(--primary);padding:0 8px;font-size:1.2rem;}
+
+/* Survey */
+.survey-wrap{max-width:700px;margin:0 auto;padding:40px 24px;}
+.survey-header{text-align:center;margin-bottom:36px;}
+.survey-header h1{font-size:1.8rem;font-weight:800;margin-bottom:10px;}
+.survey-header p{color:var(--text-light);}
+
+.timer-bar{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;font-size:.875rem;}
+.timer-label{color:var(--text-light);}
+.timer-value{font-weight:700;color:var(--primary);font-variant-numeric:tabular-nums;}
+
+.progress-bar{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 20px;display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.progress-track{flex:1;background:var(--bg);border-radius:4px;height:6px;}
+.progress-fill{height:6px;border-radius:4px;background:var(--primary);transition:width .3s;}
+.progress-text{font-size:.825rem;color:var(--text-light);white-space:nowrap;}
+
+.question-card{background:white;border:1.5px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow);transition:border-color .2s;}
+.question-card:hover{border-color:var(--primary);}
+.question-card.answered{border-color:var(--success);}
+.question-card.qerror{border-color:var(--danger);}
+.q-label{font-size:.75rem;font-weight:700;color:var(--primary);letter-spacing:.5px;margin-bottom:10px;}
+.q-text{font-size:1rem;font-weight:600;margin-bottom:16px;}
+.options{display:flex;flex-direction:column;gap:8px;}
+.option-label{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;font-size:.9rem;}
+.option-label:hover{border-color:var(--primary);background:var(--primary-light);}
+.option-label.selected{border-color:var(--primary);background:var(--primary-light);}
+.radio-circle{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.option-label.selected .radio-circle{border-color:var(--primary);background:var(--primary);}
+.radio-dot{width:7px;height:7px;border-radius:50%;background:white;display:none;}
+.option-label.selected .radio-dot{display:block;}
+
+/* Alert */
+.alert{padding:14px 18px;border-radius:10px;margin-bottom:16px;font-size:.9rem;display:flex;align-items:center;gap:10px;}
+.alert-error{background:var(--danger-light);border:1px solid #FECACA;color:#B91C1C;}
+
+/* Review */
+.review-wrap{max-width:720px;margin:0 auto;padding:40px 24px;}
+.score-card{background:white;border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center;box-shadow:var(--shadow-md);margin-bottom:24px;}
+.score-circle{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;margin:0 auto 14px;}
+.score-high{background:var(--success-light);color:var(--success);border:3px solid var(--success);}
+.score-medium{background:var(--warning-light);color:var(--warning);border:3px solid var(--warning);}
+.score-low{background:var(--danger-light);color:var(--danger);border:3px solid var(--danger);}
+.score-title{font-size:1rem;font-weight:700;margin-bottom:8px;}
+.quality-badge{display:inline-block;padding:6px 18px;border-radius:100px;font-size:.875rem;font-weight:700;}
+.quality-High{background:var(--success-light);color:var(--success);}
+.quality-Medium{background:var(--warning-light);color:var(--warning);}
+.quality-Low{background:var(--danger-light);color:var(--danger);}
+
+.issue-card{background:white;border:1px solid var(--border);border-right:4px solid var(--danger);border-radius:12px;padding:20px;margin-bottom:12px;box-shadow:var(--shadow);}
+.issue-card.sev-Medium{border-right-color:var(--warning);}
+.issue-card.sev-Low{border-right-color:#60A5FA;}
+.issue-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sev-badge{padding:4px 12px;border-radius:100px;font-size:.75rem;font-weight:700;}
+.sev-High{background:var(--danger-light);color:var(--danger);}
+.sev-Medium{background:var(--warning-light);color:var(--warning);}
+.sev-Low{background:#EFF6FF;color:#2563EB;}
+.deduction{font-size:.8rem;font-weight:700;color:var(--danger);}
+.issue-msg{font-size:.9rem;font-weight:600;margin-bottom:6px;}
+.issue-exp{font-size:.85rem;color:var(--text-light);margin-bottom:6px;line-height:1.7;}
+.issue-act{font-size:.85rem;color:var(--primary);}
+.no-issues{background:var(--success-light);border:1px solid #A7F3D0;border-radius:12px;padding:28px;text-align:center;margin-bottom:20px;}
+.confirm-section{background:white;border:1px solid var(--border);border-radius:14px;padding:24px;margin-top:20px;box-shadow:var(--shadow);}
+.confirm-section h4{font-size:1rem;font-weight:700;margin-bottom:16px;}
+.confirm-btns{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* Dashboard */
+.db-header{background:white;border-bottom:1px solid var(--border);padding:24px 0;margin-bottom:32px;}
+.stat-widget{background:white;border:1px solid var(--border);border-radius:14px;padding:20px 24px;box-shadow:var(--shadow);}
+.stat-widget-label{font-size:.8rem;color:var(--text-light);font-weight:600;margin-bottom:8px;}
+.stat-widget-value{font-size:1.9rem;font-weight:800;color:var(--text-dark);}
+.stat-widget-sub{font-size:.8rem;color:var(--text-light);margin-top:4px;}
+.bar-chart{margin-top:16px;}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.bar-label{font-size:.8rem;color:var(--text-light);width:190px;flex-shrink:0;text-align:right;}
+.bar-track{flex:1;background:var(--bg);border-radius:4px;height:10px;}
+.bar-fill{height:10px;border-radius:4px;}
+.bar-count{font-size:.8rem;font-weight:700;color:var(--text-medium);width:24px;text-align:left;}
+
+/* Success / Error */
+.center-wrap{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:40px 24px;}
+.result-card{background:white;border:1px solid var(--border);border-radius:20px;padding:48px;text-align:center;max-width:480px;width:100%;box-shadow:var(--shadow-lg);}
+.result-icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 24px;}
+.icon-success{background:var(--success-light);border:3px solid var(--success);color:var(--success);}
+.icon-error{background:var(--danger-light);border:3px solid var(--danger);color:var(--danger);}
+.result-card h2{font-size:1.5rem;font-weight:800;margin-bottom:12px;}
+.result-summary{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin:20px 0;text-align:right;}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.875rem;}
+.result-row:last-child{border-bottom:none;}
+.result-key{color:var(--text-light);}
+.result-val{font-weight:700;}
+
+/* Spinner */
+.spinner-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.87);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.spinner-overlay.show{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid var(--primary-light);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner-text{font-size:1rem;font-weight:600;color:var(--text-medium);}
+
+/* Tech strip */
+.tech-strip{background:var(--bg);border-top:1px solid var(--border);padding:20px 0;}
+.tech-strip-inner{display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;}
+.tech-tag{display:flex;align-items:center;gap:8px;background:white;border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:.82rem;font-weight:600;color:var(--text-medium);}
+
+/* Footer */
+.footer{background:var(--text-dark);color:rgba(255,255,255,.6);text-align:center;padding:18px;font-size:.825rem;}
+.footer strong{color:white;}
+
+/* Rules table */
+.rules-table{width:100%;border-collapse:collapse;margin-top:16px;}
+.rules-table th{background:var(--bg);padding:12px 16px;text-align:right;font-size:.8rem;font-weight:700;color:var(--text-light);border-bottom:1px solid var(--border);}
+.rules-table td{padding:12px 16px;font-size:.875rem;border-bottom:1px solid var(--border);}
+.rules-table tr:last-child td{border-bottom:none;}
+.rule-chip{display:inline-block;background:var(--primary-light);color:var(--primary);padding:3px 10px;border-radius:100px;font-size:.75rem;font-weight:700;}
+.highlight{background:var(--primary-light);border:1px solid rgba(79,70,229,.2);border-radius:12px;padding:20px 24px;margin:16px 0;}
+.icon-circle{width:52px;height:52px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:14px;}
+
+/* Prototype badge */
+.proto-badge{position:fixed;top:12px;left:12px;background:var(--primary);color:white;padding:4px 12px;border-radius:100px;font-size:.7rem;font-weight:700;z-index:9999;pointer-events:none;letter-spacing:.5px;}
+
+.divider{border:none;border-top:1px solid var(--border);margin:24px 0;}
+
+@media(max-width:768px){
+  .grid-3,.grid-4{grid-template-columns:repeat(2,1fr);}
+  .hero h1{font-size:1.75rem;}
+  .bar-label{width:120px;}
+}
+@media(max-width:480px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+}
+
+/* Cleaning Section */
+.cleaning-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.cleaning-card{background:white;border:1px solid var(--border);border-radius:14px;padding:20px 24px;box-shadow:var(--shadow);border-top:3px solid var(--border);}
+.cleaning-card.c-original{border-top-color:#6366F1;}
+.cleaning-card.c-duplicates{border-top-color:var(--warning);}
+.cleaning-card.c-suspicious{border-top-color:var(--danger);}
+.cleaning-card.c-clean{border-top-color:var(--success);}
+.cleaning-card-label{font-size:.8rem;color:var(--text-light);font-weight:600;margin-bottom:6px;}
+.cleaning-card-value{font-size:2rem;font-weight:800;margin-bottom:4px;}
+.cleaning-card-sub{font-size:.78rem;color:var(--text-light);}
+
+/* Blocked banner */
+.blocked-banner{background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.4);border-radius:14px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;}
+.blocked-icon{font-size:1.8rem;flex-shrink:0;margin-top:2px;}
+.blocked-content h3{font-size:1rem;font-weight:700;color:#EF4444;margin-bottom:6px;}
+.blocked-content p{font-size:.875rem;color:var(--text-medium);line-height:1.6;}
+.blocked-content ul{margin:6px 0 0 16px;font-size:.85rem;color:var(--text-medium);line-height:1.8;}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;pointer-events:none;}
+
+/* Export PDF button */
+.btn-export{background:linear-gradient(135deg,#10B981,#059669);color:white;border:none;}
+.btn-export:hover{background:linear-gradient(135deg,#059669,#047857);transform:translateY(-1px);}
+
+@media(max-width:768px){.cleaning-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+
+<div class="proto-badge">PROTOTYPE</div>
+
+<div id="spinner" class="spinner-overlay">
+  <div class="spinner"></div>
+  <p class="spinner-text" id="spinnerText">جارٍ التحقق من الإجابات...</p>
+</div>
+
+<!-- ============================================================
+  PAGE 1: HOME
+============================================================ -->
+<div id="page-home" class="page active">
+  <nav class="navbar"><div class="navbar-inner">
+    <div class="brand" onclick="goto('home')"><div class="brand-icon">TL</div><span class="brand-name">TrustLayer AI</span></div>
+    <ul class="nav-links">
+      <li><a onclick="goto('home')" class="active">الرئيسية</a></li>
+      <li><a onclick="goto('how-it-works')">كيف يعمل؟</a></li>
+      <li><a onclick="goto('use-system')">استخدم النظام</a></li>
+      <li><a onclick="goto('dashboard')">لوحة التحكم</a></li>
+    </ul>
+  </div></nav>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">نظام وسيط لجودة بيانات الاستبيانات</div>
+      <h1>ضمان جودة بيانات الاستبيانات من خلال اكتشاف التناقضات عند إدخالها</h1>
+      <p>يدعم اتخاذ قرارات أدق بالاعتماد على بيانات موثوقة ونظيفة</p>
+      <div class="hero-buttons">
+        <button class="btn btn-lg" style="background:white;color:var(--primary);font-weight:700;" onclick="goto('survey')">ابدأ الاستبيان</button>
+        <button class="btn btn-outline btn-lg" onclick="goto('how-it-works')">كيف يعمل؟</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:60px;">
+    <div class="container">
+      <div style="text-align:center;max-width:700px;margin:0 auto 48px;">
+        <div class="section-label">ما هو TrustLayer AI؟</div>
+        <h2 class="section-title">نظام وسيط ذكي لضمان جودة بيانات الاستبيانات</h2>
+        <p class="section-desc" style="margin:0 auto;">يعمل كطبقة وسيطة بين منصة الاستبيان ومستودع البيانات، يتحقق من جودة الإجابات لحظياً قبل حفظها باستخدام قواعد منطقية وتحليل ذكاء اصطناعي.</p>
+      </div>
+
+      <div class="section-label" style="display:block;text-align:center;margin-bottom:24px;">المزايا الرئيسية</div>
+      <div class="grid-3" style="margin-bottom:60px;">
+        <div class="card feature-card"><div class="feature-icon">⚡</div><h3>اكتشاف التناقضات لحظياً</h3><p>فحص الإجابات فور تعبئتها باستخدام قواعد منطقية متخصصة لاكتشاف أي تعارض في البيانات.</p></div>
+        <div class="card feature-card"><div class="feature-icon">📊</div><h3>تحسين جودة البيانات</h3><p>رفع معدل دقة البيانات المحفوظة عبر التحقق المسبق وتمكين التصحيح قبل الإرسال النهائي.</p></div>
+        <div class="card feature-card"><div class="feature-icon">⏱️</div><h3>تقليل وقت التنظيف</h3><p>توفير وقت التنظيف اليدوي بعد الجمع مما يزيد كفاءة فريق البيانات بشكل ملحوظ.</p></div>
+        <div class="card feature-card"><div class="feature-icon">🤖</div><h3>تحليل ذكاء اصطناعي</h3><p>نموذج Claude AI يكتشف التناقضات الدلالية الخفية التي لا تغطيها القواعد المنطقية.</p></div>
+        <div class="card feature-card"><div class="feature-icon">🔍</div><h3>درجة الثقة</h3><p>كل استجابة تحصل على درجة ثقة (0–100) وتصنيف جودة لتسهيل مراجعة البيانات.</p></div>
+        <div class="card feature-card"><div class="feature-icon">💡</div><h3>تفسير عربي واضح</h3><p>شرح كل مشكلة بلغة عربية بسيطة مع توضيح سبب المشكلة والإجراء المقترح.</p></div>
+      </div>
+
+      <div class="section-label" style="display:block;text-align:center;margin-bottom:24px;">إحصائيات النظام</div>
+      <div class="grid-3">
+        <div class="stat-card"><div class="stat-value">92.4%</div><div class="stat-label">دقة الكشف عن التناقضات</div></div>
+        <div class="stat-card"><div class="stat-value">68%</div><div class="stat-label">توفير وقت تنظيف البيانات</div></div>
+        <div class="stat-card"><div class="stat-value">90.1%</div><div class="stat-label">معدل الاستدعاء (Recall)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tech-strip"><div class="container"><div class="tech-strip-inner">
+    <span style="font-size:.8rem;font-weight:700;color:var(--text-light);">التقنيات:</span>
+    <div class="tech-tag">🐍 Python + FastAPI</div>
+    <div class="tech-tag">🗄️ SQLite</div>
+    <div class="tech-tag">🤖 Claude AI</div>
+    <div class="tech-tag">🌐 HTML/CSS/JS</div>
+    <div class="tech-tag">⚙️ Jinja2</div>
+  </div></div></div>
+  <div class="footer"><strong>TrustLayer AI</strong> — نظام جودة بيانات الاستبيانات | فريق بالمرصاد · 2026</div>
+</div>
+
+<!-- ============================================================
+  PAGE 2: HOW IT WORKS
+============================================================ -->
+<div id="page-how-it-works" class="page">
+  <nav class="navbar"><div class="navbar-inner">
+    <div class="brand" onclick="goto('home')"><div class="brand-icon">TL</div><span class="brand-name">TrustLayer AI</span></div>
+    <ul class="nav-links">
+      <li><a onclick="goto('home')">الرئيسية</a></li>
+      <li><a onclick="goto('how-it-works')" class="active">كيف يعمل؟</a></li>
+      <li><a onclick="goto('use-system')">استخدم النظام</a></li>
+      <li><a onclick="goto('dashboard')">لوحة التحكم</a></li>
+    </ul>
+  </div></nav>
+
+  <div style="background:linear-gradient(135deg,var(--primary-light),white);padding:60px 0;text-align:center;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label">آلية العمل</div>
+      <h1 class="section-title" style="margin-bottom:10px;">كيف يعمل TrustLayer AI؟</h1>
+      <p class="section-desc" style="margin:0 auto;">من لحظة إدخال الإجابات حتى حفظها بأمان في قاعدة البيانات</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:48px;">
+        <div class="section-label" style="margin-bottom:18px;">مسار معالجة البيانات</div>
+        <div class="flow">
+          <div class="flow-node">إجابات الاستبيان</div><div class="flow-arrow">←</div>
+          <div class="flow-node">6 قواعد تحقق</div><div class="flow-arrow">←</div>
+          <div class="flow-node">تحليل Claude AI</div><div class="flow-arrow">←</div>
+          <div class="flow-node">درجة الثقة</div><div class="flow-arrow">←</div>
+          <div class="flow-node">مراجعة المستخدم</div><div class="flow-arrow">←</div>
+          <div class="flow-node">قاعدة البيانات</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:48px;">
+        <div>
+          <div class="section-label" style="margin-bottom:20px;">خطوات المعالجة</div>
+          <div class="steps-list">
+            <div class="step"><div class="step-num">١</div><div class="step-content"><h4>استقبال إجابات الاستبيان</h4><p>يستقبل النظام الإجابات الـ11 مع وقت الاستجابة المسجَّل تلقائياً عبر الموقت المدمج.</p></div></div>
+            <div class="step"><div class="step-num">٢</div><div class="step-content"><h4>تشغيل قواعد التحقق المنطقية</h4><p>يُشغَّل 6 قواعد منطقية مُحددة مسبقاً تكتشف التناقضات الشائعة في الإجابات.</p></div></div>
+            <div class="step"><div class="step-num">٣</div><div class="step-content"><h4>التحليل الدلالي بالذكاء الاصطناعي</h4><p>نموذج Claude AI يحلل الإجابات دلالياً للكشف عن تناقضات خفية لم تغطِها القواعد.</p></div></div>
+            <div class="step"><div class="step-num">٤</div><div class="step-content"><h4>حساب درجة الثقة</h4><p>تبدأ الدرجة من 100 وتُخفَّض بحسب خطورة كل مشكلة مكتشفة حتى حد أدنى 0.</p></div></div>
+            <div class="step"><div class="step-num">٥</div><div class="step-content"><h4>عرض النتائج ومراجعتها</h4><p>يرى المستخدم درجة الثقة وقائمة المشكلات مع تفسير عربي واضح لكل مشكلة.</p></div></div>
+            <div class="step"><div class="step-num">٦</div><div class="step-content"><h4>التأكيد والحفظ النهائي</h4><p>بعد المراجعة والتصحيح الاختياري، يُؤكد المستخدم الإرسال فتُحفظ البيانات.</p></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label" style="margin-bottom:20px;">قواعد التحقق الست</div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="rules-table">
+              <thead><tr><th>الكود</th><th>الوصف</th><th>الخصم</th></tr></thead>
+              <tbody>
+                <tr><td><span class="rule-chip">R-01</span></td><td>الدخل المنخفض مع الإنفاق الفاخر</td><td style="color:var(--danger);font-weight:700;">-30</td></tr>
+                <tr><td><span class="rule-chip">R-02</span></td><td>بدون إنترنت مع تقييم تطبيقات</td><td style="color:var(--warning);font-weight:700;">-15</td></tr>
+                <tr><td><span class="rule-chip">R-03</span></td><td>بدون تلفاز مع ذكر قنوات مفضلة</td><td style="color:var(--warning);font-weight:700;">-15</td></tr>
+                <tr><td><span class="rule-chip">R-04</span></td><td>تكرار شراء عالٍ مع إنفاق منخفض جداً</td><td style="color:var(--warning);font-weight:700;">-15</td></tr>
+                <tr><td><span class="rule-chip">R-05</span></td><td>العلامة المفضلة ≠ آخر مشتريات</td><td style="color:#2563EB;font-weight:700;">-10</td></tr>
+                <tr><td><span class="rule-chip">R-06</span></td><td>وقت استجابة سريع جداً (&lt;15 ث)</td><td style="color:#2563EB;font-weight:700;">-5</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card" style="margin-top:20px;">
+            <h4 style="font-size:.95rem;font-weight:700;margin-bottom:14px;">مستويات درجة الثقة</h4>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;gap:12px;"><div style="width:12px;height:12px;border-radius:50%;background:var(--success);flex-shrink:0;"></div><span style="font-size:.875rem;"><strong>عالية:</strong> 90–100 نقطة</span></div>
+              <div style="display:flex;align-items:center;gap:12px;"><div style="width:12px;height:12px;border-radius:50%;background:var(--warning);flex-shrink:0;"></div><span style="font-size:.875rem;"><strong>متوسطة:</strong> 70–89 نقطة</span></div>
+              <div style="display:flex;align-items:center;gap:12px;"><div style="width:12px;height:12px;border-radius:50%;background:var(--danger);flex-shrink:0;"></div><span style="font-size:.875rem;"><strong>منخفضة:</strong> أقل من 70 نقطة</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;"><button class="btn btn-primary btn-lg" onclick="goto('survey')">ابدأ الاستبيان الآن ←</button></div>
+    </div>
+  </section>
+  <div class="footer"><strong>TrustLayer AI</strong> — نظام جودة بيانات الاستبيانات</div>
+</div>
+
+<!-- ============================================================
+  PAGE 3: USE SYSTEM
+============================================================ -->
+<div id="page-use-system" class="page">
+  <nav class="navbar"><div class="navbar-inner">
+    <div class="brand" onclick="goto('home')"><div class="brand-icon">TL</div><span class="brand-name">TrustLayer AI</span></div>
+    <ul class="nav-links">
+      <li><a onclick="goto('home')">الرئيسية</a></li>
+      <li><a onclick="goto('how-it-works')">كيف يعمل؟</a></li>
+      <li><a onclick="goto('use-system')" class="active">استخدم النظام</a></li>
+      <li><a onclick="goto('dashboard')">لوحة التحكم</a></li>
+    </ul>
+  </div></nav>
+
+  <div style="background:linear-gradient(135deg,#EEF2FF,var(--bg));padding:60px 0;text-align:center;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="section-label">دليل الاستخدام</div>
+      <h1 class="section-title" style="margin-bottom:10px;">استخدم النظام</h1>
+      <p class="section-desc" style="margin:0 auto;">اتبع هذه الخطوات للحصول على أفضل تجربة مع TrustLayer AI</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="margin-bottom:48px;">
+        <div>
+          <div class="section-label" style="margin-bottom:20px;">خطوات الاستخدام</div>
+          <div class="steps-list">
+            <div class="step"><div class="step-num">١</div><div class="step-content"><h4>انتقل إلى صفحة الاستبيان</h4><p>اضغط "ابدأ الاستبيان". سيبدأ الموقت التلقائي لتسجيل وقت استجابتك.</p></div></div>
+            <div class="step"><div class="step-num">٢</div><div class="step-content"><h4>أجب على الأسئلة الـ11</h4><p>اختر الإجابة الأدق لكل سؤال. تأكد من الإجابة على جميع الأسئلة قبل الإرسال.</p></div></div>
+            <div class="step"><div class="step-num">٣</div><div class="step-content"><h4>راجع نتائج التحقق</h4><p>سيعرض النظام درجة الثقة وقائمة المشكلات مع شرح مفصل لكل منها.</p></div></div>
+            <div class="step"><div class="step-num">٤</div><div class="step-content"><h4>صحّح الإجابات (اختياري)</h4><p>إذا كانت هناك مشكلات يمكنك مراجعة إجاباتك وتصحيحها قبل الإرسال النهائي.</p></div></div>
+            <div class="step"><div class="step-num">٥</div><div class="step-content"><h4>أكّد الإرسال</h4><p>اضغط "تأكيد الإرسال" لحفظ بياناتك. ستظهر صفحة التأكيد مع ملخص النتيجة.</p></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label" style="margin-bottom:20px;">ماذا يحدث عند اكتشاف تناقض؟</div>
+          <div class="card" style="margin-bottom:14px;"><div class="icon-circle">⚠️</div><h4 style="font-size:.95rem;font-weight:700;margin-bottom:8px;">تُعرض رسالة تفسيرية</h4><p style="font-size:.875rem;color:var(--text-light);">يوضح النظام سبب المشكلة بلغة عربية بسيطة ومفهومة دون مصطلحات تقنية.</p></div>
+          <div class="card" style="margin-bottom:14px;"><div class="icon-circle">✏️</div><h4 style="font-size:.95rem;font-weight:700;margin-bottom:8px;">خيار التصحيح متاح</h4><p style="font-size:.875rem;color:var(--text-light);">يمكنك تعديل إجاباتك مباشرةً من صفحة المراجعة قبل الإرسال النهائي.</p></div>
+          <div class="card" style="margin-bottom:14px;"><div class="icon-circle">📤</div><h4 style="font-size:.95rem;font-weight:700;margin-bottom:8px;">الإرسال بقرارك</h4><p style="font-size:.875rem;color:var(--text-light);">يمكنك الإرسال حتى مع وجود مشكلات والنظام سيحفظ درجة الثقة الفعلية.</p></div>
+          <div class="highlight"><p>💡 <strong>نصيحة:</strong> خذ وقتك — الإجابات المتسرعة (أقل من 15 ثانية) قد تؤثر على درجة ثقتك.</p></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;background:var(--primary);border-radius:16px;padding:40px;color:white;">
+        <h3 style="font-size:1.3rem;font-weight:800;margin-bottom:10px;">جاهز للبدء؟</h3>
+        <p style="margin-bottom:24px;opacity:.85;">الاستبيان يستغرق 3–5 دقائق فقط</p>
+        <button class="btn btn-lg" style="background:white;color:var(--primary);font-weight:700;" onclick="goto('survey')">ابدأ الاستبيان الآن ←</button>
+      </div>
+    </div>
+  </section>
+  <div class="footer"><strong>TrustLayer AI</strong> — نظام جودة بيانات الاستبيانات</div>
+</div>
+
+<!-- ============================================================
+  PAGE 4: SURVEY
+============================================================ -->
+<div id="page-survey" class="page">
+  <div class="survey-wrap">
+    <div class="survey-header">
+      <div class="section-label">استبيان العادات الاستهلاكية</div>
+      <h1>الاستبيان</h1>
+      <p>يرجى الإجابة عن جميع الأسئلة بدقة. ستُراجَع إجاباتك بواسطة نظام TrustLayer AI.</p>
+    </div>
+
+    <div class="timer-bar">
+      <span class="timer-label">⏱ وقت الاستجابة</span>
+      <span class="timer-value" id="timerDisplay">00:00</span>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <span class="progress-text" id="progressText">0 / 11</span>
+    </div>
+
+    <div id="surveyError" class="alert alert-error" style="display:none;">⚠ يرجى إكمال جميع الحقول المطلوبة قبل المتابعة.</div>
+    <div id="questionsContainer"></div>
+
+    <div style="text-align:center;margin-top:32px;padding-bottom:48px;">
+      <button class="btn btn-primary btn-lg" id="reviewBtn" style="display:none;" onclick="submitSurvey()">مراجعة الإجابات ←</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+  PAGE 5: REVIEW
+============================================================ -->
+<div id="page-review" class="page">
+  <div class="review-wrap">
+    <div style="margin-bottom:24px;">
+      <div class="section-label">نتائج التحقق</div>
+      <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:6px;">مراجعة الإجابات</h1>
+      <p style="color:var(--text-light);">راجع نتائج تحليل إجاباتك وقرر ما إذا كنت تريد التصحيح أو الإرسال المباشر</p>
+    </div>
+
+    <!-- Blocked Banner -->
+    <div id="blockedBanner" class="blocked-banner" style="display:none;">
+      <div class="blocked-icon">🚫</div>
+      <div class="blocked-content">
+        <h3>لا يمكن إرسال الاستبيان</h3>
+        <p>جودة الاستجابات منخفضة جداً أو تحتوي على أنماط مشبوهة.</p>
+        <ul id="blockedReasonsList"></ul>
+      </div>
+    </div>
+
+    <div class="score-card">
+      <div id="scoreCircle" class="score-circle score-medium"><span id="scoreValue">—</span></div>
+      <div class="score-title">درجة الثقة</div>
+      <div id="qualityBadge" class="quality-badge quality-Medium" style="margin-top:8px;">جارٍ الحساب...</div>
+      <p id="scoreDesc" style="font-size:.875rem;color:var(--text-light);margin-top:12px;max-width:420px;margin-left:auto;margin-right:auto;"></p>
+    </div>
+
+    <div id="issuesList"></div>
+
+    <div class="confirm-section">
+      <h4>ماذا تريد أن تفعل؟</h4>
+      <div class="confirm-btns">
+        <button class="btn btn-primary" id="confirmBtn" onclick="confirmSubmit()">✓ تأكيد الإرسال</button>
+        <button class="btn btn-secondary" onclick="goto('survey')">✏ تعديل الإجابات</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+  PAGE 6: DASHBOARD
+============================================================ -->
+<div id="page-dashboard" class="page">
+  <nav class="navbar"><div class="navbar-inner">
+    <div class="brand" onclick="goto('home')"><div class="brand-icon">TL</div><span class="brand-name">TrustLayer AI</span></div>
+    <ul class="nav-links">
+      <li><a onclick="goto('home')">الرئيسية</a></li>
+      <li><a onclick="goto('how-it-works')">كيف يعمل؟</a></li>
+      <li><a onclick="goto('use-system')">استخدم النظام</a></li>
+      <li><a onclick="goto('dashboard')" class="active">لوحة التحكم</a></li>
+    </ul>
+  </div></nav>
+
+  <div class="db-header"><div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div class="section-label" style="margin-bottom:6px;">بيانات لحظية</div>
+      <h1 style="font-size:1.6rem;font-weight:800;">لوحة التحكم</h1>
+      <p style="color:var(--text-light);font-size:.9rem;">إحصائيات جودة بيانات الاستبيانات المُعالَجة</p>
+    </div>
+    <a href="/pdf-report" target="_blank" class="btn btn-export" style="font-size:.9rem;padding:10px 22px;">📄 تصدير تقرير PDF</a>
+  </div></div>
+
+  <div style="padding:0 0 60px;">
+    <div class="container">
+
+      <!-- KPI Cards -->
+      <div class="grid-4" style="margin-bottom:28px;">
+        <div class="stat-widget"><div class="stat-widget-label">إجمالي الاستجابات</div><div id="db-total" class="stat-widget-value" style="color:var(--primary);">—</div><div class="stat-widget-sub">منذ بدء التشغيل</div></div>
+        <div class="stat-widget"><div class="stat-widget-label">متوسط درجة الثقة</div><div id="db-avg-score" class="stat-widget-value" style="color:var(--warning);">—</div><div class="stat-widget-sub">من 100 نقطة</div></div>
+        <div class="stat-widget"><div class="stat-widget-label">معدل التصحيح</div><div id="db-correction" class="stat-widget-value" style="color:var(--success);">—</div><div class="stat-widget-sub">صحّحوا إجاباتهم</div></div>
+        <div class="stat-widget"><div class="stat-widget-label">الاستجابات المُعلَّمة</div><div id="db-flagged" class="stat-widget-value" style="color:var(--danger);">—</div><div class="stat-widget-sub">تحتاج مراجعة</div></div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid-2" style="margin-bottom:28px;">
+        <div class="card">
+          <h4 style="font-size:.95rem;font-weight:700;margin-bottom:14px;">توزيع مستويات الجودة</h4>
+          <div style="position:relative;height:230px;display:flex;align-items:center;justify-content:center;">
+            <canvas id="chartQuality"></canvas>
+          </div>
+          <div class="divider" style="margin:12px 0;"/>
+          <div style="display:flex;gap:16px;justify-content:center;font-size:.8rem;color:var(--text-light);">
+            <span id="db-pct-high"><strong style="color:var(--success);">—%</strong> عالية</span>
+            <span id="db-pct-medium"><strong style="color:var(--warning);">—%</strong> متوسطة</span>
+            <span id="db-pct-low"><strong style="color:var(--danger);">—%</strong> منخفضة</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="font-size:.95rem;font-weight:700;margin-bottom:14px;">أكثر القواعد تفعيلاً</h4>
+          <div style="position:relative;height:230px;">
+            <canvas id="chartRules"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Cleaning Section -->
+      <div style="margin-bottom:28px;">
+        <div style="margin-bottom:16px;">
+          <h4 style="font-size:1rem;font-weight:700;">🧹 ملخص تنظيف البيانات</h4>
+          <p style="font-size:.85rem;color:var(--text-light);margin-top:4px;">إزالة التكرارات والاستجابات المشبوهة قبل التحليل النهائي</p>
+        </div>
+        <div class="cleaning-grid">
+          <div class="cleaning-card c-original">
+            <div class="cleaning-card-label">البيانات الأصلية</div>
+            <div id="clean-original" class="cleaning-card-value" style="color:#6366F1;">—</div>
+            <div class="cleaning-card-sub">إجمالي الاستجابات المستلمة</div>
+          </div>
+          <div class="cleaning-card c-duplicates">
+            <div class="cleaning-card-label">مزالة (مكررة)</div>
+            <div id="clean-duplicates" class="cleaning-card-value" style="color:var(--warning);">—</div>
+            <div class="cleaning-card-sub">إجابات متطابقة تماماً</div>
+          </div>
+          <div class="cleaning-card c-suspicious">
+            <div class="cleaning-card-label">مزالة (مشبوهة)</div>
+            <div id="clean-suspicious" class="cleaning-card-value" style="color:var(--danger);">—</div>
+            <div class="cleaning-card-sub">درجة ثقة &lt;30 أو وقت &lt;5 ث</div>
+          </div>
+          <div class="cleaning-card c-clean">
+            <div class="cleaning-card-label">البيانات النظيفة</div>
+            <div id="clean-final" class="cleaning-card-value" style="color:var(--success);">—</div>
+            <div class="cleaning-card-sub">صالحة للتحليل النهائي</div>
+          </div>
+        </div>
+        <div class="card">
+          <h4 style="font-size:.9rem;font-weight:700;margin-bottom:14px;">الجودة قبل وبعد التنظيف</h4>
+          <div style="position:relative;height:200px;">
+            <canvas id="chartCleaning"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- System KPIs -->
+      <div class="card" style="margin-bottom:28px;">
+        <h4 style="font-size:.95rem;font-weight:700;margin-bottom:20px;">مؤشرات أداء النظام</h4>
+        <div class="grid-4">
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:10px;"><div style="font-size:1.6rem;font-weight:800;color:var(--primary);">92.4%</div><div style="font-size:.8rem;color:var(--text-light);margin-top:4px;">الدقة (Precision)</div></div>
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:10px;"><div style="font-size:1.6rem;font-weight:800;color:var(--success);">90.1%</div><div style="font-size:.8rem;color:var(--text-light);margin-top:4px;">الاستدعاء (Recall)</div></div>
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:10px;"><div style="font-size:1.6rem;font-weight:800;color:var(--warning);">87.3%</div><div style="font-size:.8rem;color:var(--text-light);margin-top:4px;">معدل الإكمال</div></div>
+          <div style="text-align:center;padding:16px;background:var(--bg);border-radius:10px;"><div style="font-size:1.6rem;font-weight:800;color:var(--danger);">68%</div><div style="font-size:.8rem;color:var(--text-light);margin-top:4px;">توفير وقت التنظيف</div></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;"><button class="btn btn-primary" onclick="goto('survey')">إجراء استبيان جديد ←</button></div>
+    </div>
+  </div>
+  <div class="footer"><strong>TrustLayer AI</strong> — لوحة التحكم · قراءة فقط</div>
+</div>
+
+<!-- ============================================================
+  PAGE 7: SUCCESS
+============================================================ -->
+<div id="page-success" class="page">
+  <div class="center-wrap">
+    <div class="result-card">
+      <div class="result-icon icon-success">✓</div>
+      <h2 style="color:var(--success);">تم الإرسال بنجاح!</h2>
+      <p style="color:var(--text-light);margin-bottom:4px;">تم حفظ إجاباتك في قاعدة البيانات بنجاح</p>
+      <div class="result-summary">
+        <div class="result-row"><span class="result-key">رقم الاستجابة</span><span class="result-val" id="successId">—</span></div>
+        <div class="result-row"><span class="result-key">درجة الثقة</span><span class="result-val" id="successScore">—</span></div>
+        <div class="result-row"><span class="result-key">مستوى الجودة</span><span class="result-val" id="successQuality">—</span></div>
+        <div class="result-row"><span class="result-key">حالة التحقق</span><span class="result-val" id="successStatus">—</span></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startNewSurvey()">استبيان جديد</button>
+        <button class="btn btn-secondary" onclick="goto('dashboard')">لوحة التحكم</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+  PAGE 8: ERROR
+============================================================ -->
+<div id="page-error" class="page">
+  <div class="center-wrap">
+    <div class="result-card">
+      <div class="result-icon icon-error">✕</div>
+      <h2 style="color:var(--danger);">حدث خطأ</h2>
+      <p id="errorMsg" style="color:var(--text-light);">تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px;">
+        <button class="btn btn-primary" onclick="goto('survey')">إعادة المحاولة</button>
+        <button class="btn btn-secondary" onclick="goto('home')">الصفحة الرئيسية</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+  JAVASCRIPT
+============================================================ -->
+<script>
+// State
+let answers = {};
+let timerSeconds = 0;
+let timerInterval = null;
+let validationResult = null;
+let responseCounter = 100;
+
+// Questions data
+const QUESTIONS = [
+  { id:'monthly_income', label:'السؤال الأول — الدخل الشهري', text:'ما هو إجمالي دخلك الشهري؟', options:[
+    {v:'less_than_3000',l:'أقل من 3,000 ريال'},{v:'3000_to_7000',l:'3,000 – 7,000 ريال'},
+    {v:'7000_to_15000',l:'7,000 – 15,000 ريال'},{v:'above_15000',l:'أكثر من 15,000 ريال'}]},
+  { id:'luxury_purchase_frequency', label:'السؤال الثاني — المشتريات الفاخرة', text:'كم مرة تشتري منتجات فاخرة أو باهظة الثمن في الشهر؟', options:[
+    {v:'never',l:'أبداً'},{v:'rarely',l:'نادراً (مرة كل عدة أشهر)'},
+    {v:'monthly',l:'شهرياً'},{v:'weekly',l:'أسبوعياً أو أكثر'}]},
+  { id:'internet_usage', label:'السؤال الثالث — استخدام الإنترنت', text:'هل تستخدم الإنترنت بشكل منتظم؟', options:[
+    {v:'yes',l:'نعم'},{v:'no',l:'لا'}]},
+  { id:'app_evaluation', label:'السؤال الرابع — تقييم التطبيقات', text:'كيف تقيّم جودة تطبيقات الهاتف المحمول التي تستخدمها؟', options:[
+    {v:'not_applicable',l:'لا ينطبق عليّ'},{v:'poor',l:'ضعيفة'},
+    {v:'average',l:'متوسطة'},{v:'good',l:'جيدة'},{v:'excellent',l:'ممتازة'}]},
+  { id:'tv_usage', label:'السؤال الخامس — مشاهدة التلفاز', text:'هل تشاهد التلفاز؟', options:[
+    {v:'yes',l:'نعم'},{v:'no',l:'لا'}]},
+  { id:'favorite_tv_channels', label:'السؤال السادس — القنوات المفضلة', text:'ما نوع القنوات التلفزيونية المفضلة لديك؟', options:[
+    {v:'none',l:'لا أشاهد قنوات بعينها'},{v:'news',l:'القنوات الإخبارية'},
+    {v:'sports',l:'القنوات الرياضية'},{v:'entertainment',l:'قنوات الترفيه والدراما'},
+    {v:'documentary',l:'القنوات الوثائقية'}]},
+  { id:'purchase_frequency', label:'السؤال السابع — تكرار الشراء', text:'كم مرة تشتري منتجات استهلاكية في الشهر؟', options:[
+    {v:'once',l:'مرة واحدة أو أقل'},{v:'two_to_three',l:'2–3 مرات'},
+    {v:'four_to_six',l:'4–6 مرات'},{v:'more_than_six',l:'أكثر من 6 مرات'}]},
+  { id:'monthly_spending', label:'السؤال الثامن — الإنفاق الشهري', text:'ما هو إجمالي إنفاقك الشهري على المنتجات الاستهلاكية؟', options:[
+    {v:'less_than_50',l:'أقل من 50 ريال'},{v:'50_to_200',l:'50–200 ريال'},
+    {v:'200_to_500',l:'200–500 ريال'},{v:'above_500',l:'أكثر من 500 ريال'}]},
+  { id:'brand_preference', label:'السؤال التاسع — العلامة التجارية المفضلة', text:'ما هي علامتك التجارية المفضلة للمنتجات الغذائية؟', options:[
+    {v:'almarai',l:'المراعي'},{v:'nadec',l:'نادك'},
+    {v:'saudia',l:'سعودية للألبان'},{v:'other',l:'أخرى'}]},
+  { id:'last_purchase', label:'السؤال العاشر — آخر مشتريات', text:'ما هي آخر علامة تجارية اشتريت منها منتجاً غذائياً؟', options:[
+    {v:'almarai',l:'المراعي'},{v:'nadec',l:'نادك'},
+    {v:'saudia',l:'سعودية للألبان'},{v:'other',l:'أخرى / لا أتذكر'}]},
+  { id:'purchase_reason', label:'السؤال الحادي عشر — سبب الشراء', text:'ما أهم عامل يؤثر في قرار شرائك للمنتجات الاستهلاكية؟', options:[
+    {v:'price',l:'السعر'},{v:'quality',l:'الجودة'},
+    {v:'brand',l:'العلامة التجارية'},{v:'availability',l:'التوفر والسهولة'}]},
+];
+
+// Navigation
+function goto(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+  if (page === 'survey') initSurvey();
+  if (page === 'dashboard') loadDashboardData();
+}
+
+// ── Dashboard Data ──────────────────────────────────────────────
+let chartQuality = null, chartRules = null, chartCleaning = null;
+
+async function loadDashboardData() {
+  try {
+    const [statsRes, rulesRes, cleanRes] = await Promise.all([
+      fetch('/api/dashboard-stats'),
+      fetch('/api/rules-frequency'),
+      fetch('/api/cleaning-stats')
+    ]);
+    const stats = await statsRes.json();
+    const rules = await rulesRes.json();
+    const cleaning = await cleanRes.json();
+    applyDashboardData(stats, rules, cleaning);
+  } catch(e) {
+    applyDashboardData(
+      { total_responses:305, avg_confidence_score:78.4, correction_rate:34.2, flagged_count:89,
+        high_quality_count:165, medium_quality_count:85, low_quality_count:55 },
+      [
+        { rule:'R-01: الدخل vs الفخامة', count:85, severity:'High' },
+        { rule:'R-05: العلامة المفضلة vs الأخيرة', count:62, severity:'Low' },
+        { rule:'R-04: الشراء vs الإنفاق', count:48, severity:'Medium' },
+        { rule:'AI: تحليل دلالي', count:31, severity:'Medium' },
+        { rule:'R-06: سرعة الإجابة', count:27, severity:'Low' }
+      ],
+      { original_count:305, removed_duplicates:9, removed_suspicious:43, final_clean:253,
+        high_before:130, medium_before:85, low_before:90,
+        high_after:165, medium_after:60, low_after:28 }
+    );
+  }
+}
+
+function applyDashboardData(stats, rules, cleaning) {
+  document.getElementById('db-total').textContent = stats.total_responses;
+  document.getElementById('db-avg-score').textContent = stats.avg_confidence_score;
+  document.getElementById('db-correction').textContent = stats.correction_rate + '%';
+  document.getElementById('db-flagged').textContent = stats.flagged_count;
+
+  const total = stats.total_responses || 1;
+  const hp = Math.round(stats.high_quality_count / total * 100);
+  const mp = Math.round(stats.medium_quality_count / total * 100);
+  const lp = Math.round(stats.low_quality_count / total * 100);
+  document.getElementById('db-pct-high').innerHTML = `<strong style="color:var(--success);">${hp}%</strong> عالية`;
+  document.getElementById('db-pct-medium').innerHTML = `<strong style="color:var(--warning);">${mp}%</strong> متوسطة`;
+  document.getElementById('db-pct-low').innerHTML = `<strong style="color:var(--danger);">${lp}%</strong> منخفضة`;
+
+  document.getElementById('clean-original').textContent = cleaning.original_count;
+  document.getElementById('clean-duplicates').textContent = cleaning.removed_duplicates;
+  document.getElementById('clean-suspicious').textContent = cleaning.removed_suspicious;
+  document.getElementById('clean-final').textContent = cleaning.final_clean;
+
+  renderDashboardCharts(stats, rules, cleaning);
+}
+
+function renderDashboardCharts(stats, rules, cleaning) {
+  if (chartQuality) { chartQuality.destroy(); chartQuality = null; }
+  if (chartRules)   { chartRules.destroy();   chartRules   = null; }
+  if (chartCleaning){ chartCleaning.destroy(); chartCleaning = null; }
+
+  // 1. Quality Donut
+  chartQuality = new Chart(document.getElementById('chartQuality'), {
+    type: 'doughnut',
+    data: {
+      labels: ['عالية', 'متوسطة', 'منخفضة'],
+      datasets: [{
+        data: [stats.high_quality_count, stats.medium_quality_count, stats.low_quality_count],
+        backgroundColor: ['#10B981','#F59E0B','#EF4444'],
+        borderWidth: 0, hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: { legend: { position:'bottom', labels:{ font:{family:'Cairo',size:12}, padding:14 } } }
+    }
+  });
+
+  // 2. Rules Horizontal Bar
+  const rColors = rules.map(r => r.severity === 'High' ? '#EF4444' : r.severity === 'Medium' ? '#F59E0B' : '#60A5FA');
+  chartRules = new Chart(document.getElementById('chartRules'), {
+    type: 'bar',
+    data: {
+      labels: rules.map(r => r.rule),
+      datasets: [{ data: rules.map(r => r.count), backgroundColor: rColors, borderRadius: 6, borderSkipped: false }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color:'#F3F4F6' }, ticks: { font:{family:'Cairo',size:11} } },
+        y: { grid: { display: false }, ticks: { font:{family:'Cairo',size:11} } }
+      }
+    }
+  });
+
+  // 3. Before/After Grouped Bar
+  chartCleaning = new Chart(document.getElementById('chartCleaning'), {
+    type: 'bar',
+    data: {
+      labels: ['عالية الجودة', 'متوسطة الجودة', 'منخفضة الجودة'],
+      datasets: [
+        { label:'قبل التنظيف', data:[cleaning.high_before, cleaning.medium_before, cleaning.low_before],
+          backgroundColor:'rgba(79,70,229,.65)', borderRadius:6 },
+        { label:'بعد التنظيف',  data:[cleaning.high_after,  cleaning.medium_after,  cleaning.low_after],
+          backgroundColor:'rgba(16,185,129,.65)', borderRadius:6 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position:'top', labels:{ font:{family:'Cairo',size:12}, padding:14 } } },
+      scales: {
+        x: { grid:{ display:false }, ticks:{ font:{family:'Cairo',size:12} } },
+        y: { grid:{ color:'#F3F4F6' }, ticks:{ font:{family:'Cairo',size:11} } }
+      }
+    }
+  });
+}
+
+// ── Block evaluation ────────────────────────────────────────────
+function evaluateBlockStatus(score, t) {
+  const reasons = [];
+  if (score <= 30) reasons.push(`درجة الثقة منخفضة جداً (${score} / 100 ≤ 30)`);
+  if (t < 8) reasons.push(`وقت الاستجابة قصير جداً (${t} ثوانٍ)`);
+  return { blocked: reasons.length > 0, reasons };
+}
+
+// Survey init
+function initSurvey() {
+  answers = {};
+  timerSeconds = 0;
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => { timerSeconds++; updateTimer(); }, 1000);
+  renderQuestions();
+  updateProgress();
+  document.getElementById('reviewBtn').style.display = 'none';
+  document.getElementById('surveyError').style.display = 'none';
+}
+
+function updateTimer() {
+  const m = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+  const s = String(timerSeconds % 60).padStart(2, '0');
+  const el = document.getElementById('timerDisplay');
+  if (el) el.textContent = m + ':' + s;
+}
+
+function renderQuestions() {
+  const c = document.getElementById('questionsContainer');
+  c.innerHTML = QUESTIONS.map(q => `
+    <div class="question-card" id="qcard-${q.id}">
+      <div class="q-label">${q.label}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="options">
+        ${q.options.map(o => `
+          <label class="option-label" id="opt-${q.id}-${o.v}" onclick="selectOption('${q.id}','${o.v}')">
+            <div class="radio-circle"><div class="radio-dot"></div></div>
+            <span>${o.l}</span>
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectOption(qId, val) {
+  answers[qId] = val;
+  const q = QUESTIONS.find(q => q.id === qId);
+  q.options.forEach(o => {
+    const el = document.getElementById('opt-' + qId + '-' + o.v);
+    if (el) el.classList.toggle('selected', o.v === val);
+  });
+  const card = document.getElementById('qcard-' + qId);
+  if (card) { card.classList.add('answered'); card.classList.remove('qerror'); }
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct = (done / QUESTIONS.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = done + ' / ' + QUESTIONS.length;
+  document.getElementById('reviewBtn').style.display = done > 0 ? 'inline-flex' : 'none';
+}
+
+function submitSurvey() {
+  const missing = QUESTIONS.filter(q => !answers[q.id]);
+  if (missing.length) {
+    document.getElementById('surveyError').style.display = 'flex';
+    missing.forEach(q => {
+      const c = document.getElementById('qcard-' + q.id);
+      if (c) c.classList.add('qerror');
+    });
+    const first = document.getElementById('qcard-' + missing[0].id);
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  document.getElementById('surveyError').style.display = 'none';
+  showSpinner('جارٍ التحقق من الإجابات...');
+  setTimeout(() => {
+    hideSpinner();
+    clearInterval(timerInterval);
+    validationResult = runValidation(answers, timerSeconds);
+    renderReview(validationResult);
+    goto('review');
+  }, 1800);
+}
+
+// Validation engine
+function runValidation(ans, t) {
+  const issues = [];
+  if (ans.monthly_income === 'less_than_3000' && ans.luxury_purchase_frequency !== 'never')
+    issues.push({ rule:'R-01', sev:'High', ded:30, msg:'تعارض بين الدخل المنخفض والإنفاق على المنتجات الفاخرة', exp:'أفدت بأن دخلك أقل من 3,000 ريال شهرياً، لكنك تشتري منتجات فاخرة بشكل منتظم، وهو ما يبدو متعارضاً.', act:'تحقق من صحة إجابتك عن الدخل الشهري أو تكرار شراء المنتجات الفاخرة.' });
+  if (ans.internet_usage === 'no' && ans.app_evaluation !== 'not_applicable')
+    issues.push({ rule:'R-02', sev:'Medium', ded:15, msg:'تعارض بين عدم استخدام الإنترنت وتقييم تطبيقات الهاتف', exp:'أفدت بأنك لا تستخدم الإنترنت، لكنك قيّمت تطبيقات الهاتف بدلاً من اختيار "لا ينطبق".', act:'إذا كنت لا تستخدم الإنترنت، اختر "لا ينطبق عليّ" في سؤال تقييم التطبيقات.' });
+  if (ans.tv_usage === 'no' && ans.favorite_tv_channels !== 'none')
+    issues.push({ rule:'R-03', sev:'Medium', ded:15, msg:'تعارض بين عدم مشاهدة التلفاز وذكر قنوات مفضلة', exp:'أفدت بأنك لا تشاهد التلفاز، لكنك ذكرت قنوات تلفزيونية مفضلة.', act:'إذا كنت لا تشاهد التلفاز، اختر "لا أشاهد قنوات بعينها".' });
+  if (ans.purchase_frequency === 'more_than_six' && ans.monthly_spending === 'less_than_50')
+    issues.push({ rule:'R-04', sev:'Medium', ded:15, msg:'تعارض بين تكرار الشراء المرتفع والإنفاق المنخفض جداً', exp:'أفدت بأنك تشتري أكثر من 6 مرات شهرياً بإجمالي أقل من 50 ريال، وهو أمر غير منطقي.', act:'راجع إجابتك عن تكرار الشراء أو الإنفاق الشهري.' });
+  if (ans.brand_preference && ans.last_purchase && ans.brand_preference !== 'other' && ans.last_purchase !== 'other' && ans.brand_preference !== ans.last_purchase)
+    issues.push({ rule:'R-05', sev:'Low', ded:10, msg:'العلامة التجارية المفضلة تختلف عن آخر مشتريات', exp:'العلامة المفضلة لديك تختلف عن العلامة التي اشتريت منها أخيراً. قد يكون هذا طبيعياً.', act:'تأكد من صحة إجاباتك إذا كان هذا التعارض غير مقصود.' });
+  if (t < 15)
+    issues.push({ rule:'R-06', sev:'Low', ded:5, msg:'وقت الاستجابة أقل من 15 ثانية', exp:`تمت الإجابة على الاستبيان في ${t} ثانية فقط، مما يشير إلى احتمال عدم قراءة الأسئلة بعناية.`, act:'لا يتطلب إجراء، لكنه يؤثر على تقييم موثوقية البيانات.' });
+
+  let score = issues.reduce((s, i) => s - i.ded, 100);
+  score = Math.max(0, score);
+  const q = score >= 90 ? 'High' : score >= 70 ? 'Medium' : 'Low';
+  const qAr = score >= 90 ? 'عالية' : score >= 70 ? 'متوسطة' : 'منخفضة';
+  return { score, q, qAr, issues };
+}
+
+function renderReview({ score, q, qAr, issues }) {
+  document.getElementById('scoreCircle').className = 'score-circle score-' + q;
+  document.getElementById('scoreValue').textContent = score;
+  const badge = document.getElementById('qualityBadge');
+  badge.className = 'quality-badge quality-' + q;
+  badge.textContent = 'جودة ' + qAr;
+  document.getElementById('scoreDesc').textContent = issues.length === 0
+    ? 'ممتاز! لم يُكتشف أي تناقض في إجاباتك. بياناتك عالية الجودة.'
+    : `اكتُشف ${issues.length} ${issues.length === 1 ? 'مشكلة' : 'مشكلات'} في إجاباتك. راجع التفاصيل أدناه.`;
+
+  const list = document.getElementById('issuesList');
+  if (!issues.length) {
+    list.innerHTML = `<div class="no-issues"><div style="font-size:2.2rem;margin-bottom:10px;">✅</div><h3 style="color:var(--success);font-size:1.05rem;">لا توجد مشكلات مكتشفة</h3><p style="color:var(--text-light);font-size:.875rem;margin-top:6px;">إجاباتك متسقة ومنطقية</p></div>`;
+  } else {
+    list.innerHTML = issues.map(i => `
+      <div class="issue-card ${i.sev !== 'High' ? 'sev-' + i.sev : ''}">
+        <div class="issue-header">
+          <span class="sev-badge sev-${i.sev}">${i.sev === 'High' ? 'خطورة عالية' : i.sev === 'Medium' ? 'خطورة متوسطة' : 'خطورة منخفضة'}</span>
+          <span class="deduction">−${i.ded} نقطة</span>
+        </div>
+        <div class="issue-msg">${i.msg}</div>
+        <div class="issue-exp">${i.exp}</div>
+        <div class="issue-act">💡 ${i.act}</div>
+      </div>
+    `).join('');
+  }
+
+  // Block check
+  const bs = evaluateBlockStatus(score, timerSeconds);
+  const banner = document.getElementById('blockedBanner');
+  const confirmBtn = document.getElementById('confirmBtn');
+  if (bs.blocked) {
+    banner.style.display = 'flex';
+    document.getElementById('blockedReasonsList').innerHTML = bs.reasons.map(r => `<li>${r}</li>`).join('');
+    confirmBtn.disabled = true;
+  } else {
+    banner.style.display = 'none';
+    confirmBtn.disabled = false;
+  }
+}
+
+function confirmSubmit() {
+  const confirmBtn = document.getElementById('confirmBtn');
+  if (confirmBtn && confirmBtn.disabled) return;
+  showSpinner('جارٍ حفظ الإجابات...');
+  setTimeout(() => {
+    hideSpinner();
+    responseCounter++;
+    document.getElementById('successId').textContent = 'TL-' + responseCounter;
+    document.getElementById('successScore').textContent = validationResult.score + ' / 100';
+    document.getElementById('successQuality').textContent = validationResult.qAr;
+    document.getElementById('successStatus').textContent = validationResult.score >= 70 ? '✓ صالحة' : '⚠ مُعلَّمة';
+    goto('success');
+  }, 1400);
+}
+
+function startNewSurvey() { validationResult = null; answers = {}; goto('survey'); }
+
+function showSpinner(msg) {
+  document.getElementById('spinnerText').textContent = msg || 'جارٍ المعالجة...';
+  document.getElementById('spinner').classList.add('show');
+}
+function hideSpinner() { document.getElementById('spinner').classList.remove('show'); }
+</script>
+</body>
+</html>

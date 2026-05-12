@@ -1,8 +1,10 @@
 from pydantic import BaseModel
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 class ValidateRequest(BaseModel):
+    model_config = {"arbitrary_types_allowed": True}
+
     response_id: str
     source: str
     answers: Dict[str, str]
